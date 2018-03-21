@@ -1,2 +1,2 @@
-# Orga6620TP1
-Trabajo practico 1 de la materia Organizacion de computadoras
+# Orga6620TP0
+Trabajo practico 0 de la materia Organizacion de computadoras
