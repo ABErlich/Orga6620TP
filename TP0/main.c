@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "bool.h"
-#include "complex.h"
+#include "Headers/bool.h"
+#include "Headers/complex.h"
 
 
 int main(int argc, char **argv){
