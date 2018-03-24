@@ -5,8 +5,8 @@
 void GetParameterValues(int argc, char **argv, int *rowCount, int *colCount, int *width, int *height, Complex *center, Complex *seed){
 
     // Por ahora le cargo a los parametros los valores por defecto;
-    *rowCount = 480;
-    *colCount = 640;
+    *rowCount = 640;
+    *colCount = 480;
     *width = 2;
     *height = 2;
     center->real = 0;

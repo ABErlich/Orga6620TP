@@ -8,7 +8,8 @@ void printToStdout(short **mp, int rowCount, int colCount){
 
     for(i = 0; i < rowCount; i++){
         for(j = 0; j < colCount; j++){
-            printf("%d", GetMatrixValue(mp, i,j));
+            printf("(%d)", GetMatrixValue(mp, i,j));
         }
+        printf("\n");
     }
 }
