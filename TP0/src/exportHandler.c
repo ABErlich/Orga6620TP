@@ -1,5 +1,5 @@
 #include "Headers/exportHandler.h"
-#include "Headers/heapHandler.h"
+#include "Headers/matrixHandler.h"
 #include <stdio.h>
 
 void printToStdout(short **mp, int rowCount, int colCount){

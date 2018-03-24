@@ -2,26 +2,19 @@
 #include "Headers/bool.h"
 #include "Headers/complex.h"
 #include "Headers/succession.h"
-#include "Headers/heapHandler.h"
+#include "Headers/matrixHandler.h"
 #include "Headers/exportHandler.h"
+#include "Headers/inputHandler.h"
  
 Complex calculate(Complex f, Complex c);
 double Map(double pixelNumber, int totalPixels, Complex center, int width, int height);
 
 int main (int argc, char **argv){
 
-    /* Obtener estos parametros de la linea de comandos. Por defecto 640x480 */
-    int rowCount = 480, colCount = 640;
-    /* Entran como parametro, por defecto 2 y 2 */
-    int width = 2, height = 2;
-    /* Entra como parametro. Por defecto 0,5+i0,5 */
-    Complex center;
-    center.real = 0.5;
-    center.img = 0.5;
-    /* Entra como parametro. Por defecto */
-    Complex seed;
-    seed.real = 0.279;
-    seed.img = 0;
+    int rowCount,colCount,width,height;
+    Complex center,seed;
+
+    GetParameterValues(argc,argv,&rowCount,&colCount,&width,&height,&center,&seed);
 
     double i,j;
     Complex f;
@@ -40,7 +33,7 @@ int main (int argc, char **argv){
 
             /* Sucesion de numeros hasta cumplir la condicion de corte */
             result = f;
-            while (Module(result) < 1) {
+            while (Module(result) < 1 || iterationCount >= 255) {
                 result = CalculateNext(result, seed, calculate);    
                 iterationCount++;
  
@@ -66,7 +59,7 @@ double Map(double pixelNumber, int totalPixels, Complex center, int width, int h
 
 
 /* La funcion que se le pasa al calculateNext para obtener el proximo numero de la sucesion
-f^2 + c */
+f^2 + seed */
 Complex calculate(Complex f, Complex seed){
 
     Complex fSquared;

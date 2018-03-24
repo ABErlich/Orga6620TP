@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
-#ifndef __HEAPHANDLER_H_
-#define __HEAPHANDLER_H_
+#ifndef __MATRIX_HANDLER_H_
+#define __MATRIX_HANDLER_H_
 
 // Arma una matriz de short de forma dinamica con la cantidad de filas y columnas especificadas y devuelve el puntero generado
 short** GetMatrixPointer(int rows, int cols);
