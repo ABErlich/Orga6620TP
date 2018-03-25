@@ -5,6 +5,7 @@
 #include "src/Headers/matrixHandler.h"
 #include "src/Headers/exportHandler.h"
 #include "src/Headers/inputHandler.h"
+#include "src/Headers/file.h"
 
 #define EJE_X 0
 #define EJE_Y 1
@@ -14,7 +15,8 @@ Complex calculate(Complex f, Complex c);
 double MapPixel(double pixelNumber, int totalPixels, double center, int scale, int eje);
 
 int main (int argc, char **argv){
-
+    char path[30] = "./";
+    char name[30] = "tp0.pgm";
     int rowCount,colCount,width,height;
     Complex center,seed;
 
@@ -50,6 +52,8 @@ int main (int argc, char **argv){
     }
 
     printToStdout(mp, rowCount, colCount);
+
+    save_with_format_PGM(path, name, mp, rowCount, colCount);
 
     DestroyMatrixPointer(mp, rowCount, colCount);
 
