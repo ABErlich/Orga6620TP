@@ -2,6 +2,7 @@
 TP0/bin/*
 TP0/tp0.depend
 TP0/tp0.layout
+TP0/tp0.pgm
 
 # Prerequisites
 *.d
