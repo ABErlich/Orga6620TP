@@ -1,11 +1,11 @@
 #include <stdio.h>
-#include "Headers/bool.h"
-#include "Headers/complex.h"
-#include "Headers/succession.h"
-#include "Headers/matrixHandler.h"
-#include "Headers/exportHandler.h"
-#include "Headers/inputHandler.h"
- 
+#include "src/Headers/bool.h"
+#include "src/Headers/complex.h"
+#include "src/Headers/succession.h"
+#include "src/Headers/matrixHandler.h"
+#include "src/Headers/exportHandler.h"
+#include "src/Headers/inputHandler.h"
+
 #define EJE_X 0
 #define EJE_Y 1
 
@@ -24,22 +24,22 @@ int main (int argc, char **argv){
     Complex f;
     Complex result;
     short iterationCount = 0;
- 
+
     short **mp = GetMatrixPointer(rowCount, colCount);
- 
+
     /* Iteracion sobre todos los pixeles de la imagen */
     for(i = 0; i < rowCount; i++){
         for(j = 0; j < colCount; j++){
 
             f.real = MapPixel(j+1, colCount, center.real, width, EJE_X);
             f.img = MapPixel(i+1, rowCount, center.img, height, EJE_Y);
-            
+
             /* Sucesion de numeros hasta cumplir la condicion de corte */
             result = f;
             while (Module(result) < 2 && iterationCount < 255) {
-                result = CalculateNext(result, seed, calculate);    
+                result = CalculateNext(result, seed, calculate);
                 iterationCount++;
- 
+
             } // La condicion < 2 es la que impone el punto de corte para el calculo de la sucesion
 
             SetMatrixValue(mp, i, j, iterationCount);
@@ -60,16 +60,16 @@ int main (int argc, char **argv){
 ////// ACA ESTA LA MAGIA
 // Mapea mis pixeles numerados del 0 a la cantidad total a un valor en el eje imaginaro o real dependiendo del parametro
 // Por ejemplo: Si el centro esta en el 0+i0
-/*  
+/*
     Considerando que el ancho de la pantalla es de 1 y la cantidad de pixeles es 5 y los valores estan sobre el eje real
     Se maparearan de la siguiente forma:
     0 1 2 3 4 5  -------->   -0.4  -0.2  0  0.2  0.4
 */
 double MapPixel(double pixelNumber, int totalPixels, double center, int scale, int eje){
-    
+
     double result;
     double paso = scale/(double)totalPixels;
-    
+
     // este va a ser mi pixel cuya posicion es el centro osea 0+i0
     int pixelCentral = totalPixels/2 + 1;
 
@@ -87,7 +87,7 @@ double MapPixel(double pixelNumber, int totalPixels, double center, int scale, i
 
    // Ahora hago un corrimiento del valor del pixel dependiendo del centro especificado
     result += center;
- 
+
     return result;
 }
 
