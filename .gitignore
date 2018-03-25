@@ -1,3 +1,8 @@
+# CodeBlocks
+TP0/bin/*
+TP0/tp0.depend
+TP0/tp0.layout
+
 # Prerequisites
 *.d
 
@@ -29,7 +34,7 @@
 *.dylib
 
 # Executables
-*.exe
+TP0/tp0
 *.out
 *.app
 *.i*86
