@@ -39,12 +39,16 @@
 		<Unit filename="src/Headers/bool.h" />
 		<Unit filename="src/Headers/complex.h" />
 		<Unit filename="src/Headers/exportHandler.h" />
+		<Unit filename="src/Headers/file.h" />
 		<Unit filename="src/Headers/matrixHandler.h" />
 		<Unit filename="src/Headers/succession.h" />
 		<Unit filename="src/complex.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/exportHandler.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/file.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/inputHandler.c">
