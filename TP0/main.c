@@ -23,7 +23,7 @@ int main (int argc, char **argv){
     Complex center,seed;
     double width,height;
 
-    GetParameterValues(argc,argv,&rowCount,&colCount,&width,&height,&center,&seed);
+    GetParameterValues(argc,argv,&rowCount,&colCount,&width,&height,&center,&seed, &name);
 
     double i,j;
     Complex f;
