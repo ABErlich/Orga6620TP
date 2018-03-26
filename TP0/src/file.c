@@ -30,11 +30,11 @@ void save_with_format(type_format format, char* path, char* name, short **mp, in
         exit(1);
     }
     fputs("P2\n", f);
-    itoa(rows-1, aux, BASE);
+    sprintf(aux,"%d",rows-1);
     fputs(aux, f);
     fputs(" ", f);
     aux[0] = '\0';
-    itoa(columns-1, aux, BASE);
+    sprintf(aux,"%d", columns-1);
     fputs(aux, f);
     fputs("\n", f);
     aux[0] = '\0';
@@ -43,7 +43,7 @@ void save_with_format(type_format format, char* path, char* name, short **mp, in
     if(format == PGM){
         for(int i = 0; i < rows - 1; i++){
             for(int j = 0; j < columns - 1; j++){
-                itoa(mp[i][j], aux, BASE);
+                sprintf(aux,"%d",mp[i][j]);
                 if(j != columns - 2){
                     strcat(aux,SPACE);
                 }
