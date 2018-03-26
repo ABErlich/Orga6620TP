@@ -4,9 +4,9 @@ short** GetMatrixPointer(int rows, int cols){
     short **mp = 0;
     int i;
 
-    mp = (short **)malloc(rows * sizeof(short *));
-    for(i = 0; i < rows; i++){
-        mp[i] = (short *)malloc(cols * sizeof(short));
+    mp = (short **)malloc(cols * sizeof(short *));
+    for(i = 0; i < cols; i++){
+        mp[i] = (short *)malloc(rows * sizeof(short));
     }
 
     return mp;
@@ -15,7 +15,7 @@ short** GetMatrixPointer(int rows, int cols){
 void DestroyMatrixPointer(short** mp, int rows, int cols){
     int i;
 
-    for(i = 0; i < rows; i++){
+    for(i = 0; i < cols; i++){
         free(mp[i]);
     }
 
@@ -23,8 +23,8 @@ void DestroyMatrixPointer(short** mp, int rows, int cols){
 
 }
 
-void SetMatrixValue(short** mp, int row, int col, int value){
-    mp[row][col] = value;
+void SetMatrixValue(short** mp, int real, int img, int value){
+    mp[real][img] = value;
 }
 
 int GetMatrixValue(short** mp, int row, int col){

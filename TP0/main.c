@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 #include "src/Headers/bool.h"
 #include "src/Headers/complex.h"
 #include "src/Headers/succession.h"
@@ -7,18 +8,20 @@
 #include "src/Headers/inputHandler.h"
 #include "src/Headers/file.h"
 
+
 #define EJE_X 0
 #define EJE_Y 1
 
 
 Complex calculate(Complex f, Complex c);
-double MapPixel(double pixelNumber, int totalPixels, double center, int scale, int eje);
+double MapPixel(double pixelNumber, int totalPixels, double center, double scale, int eje);
 
 int main (int argc, char **argv){
     char path[30] = "./";
     char name[30] = "tp0.pgm";
-    int rowCount,colCount,width,height;
+    int rowCount,colCount;
     Complex center,seed;
+    double width,height;
 
     GetParameterValues(argc,argv,&rowCount,&colCount,&width,&height,&center,&seed);
 
@@ -44,12 +47,13 @@ int main (int argc, char **argv){
 
             } // La condicion < 2 es la que impone el punto de corte para el calculo de la sucesion
 
-            SetMatrixValue(mp, i, j, iterationCount);
+            SetMatrixValue(mp, (int)j, (int)i, iterationCount);
 
             iterationCount = 0;
         }
 
     }
+
 
     printToStdout(mp, rowCount, colCount);
 
@@ -69,7 +73,7 @@ int main (int argc, char **argv){
     Se maparearan de la siguiente forma:
     0 1 2 3 4 5  -------->   -0.4  -0.2  0  0.2  0.4
 */
-double MapPixel(double pixelNumber, int totalPixels, double center, int scale, int eje){
+double MapPixel(double pixelNumber, int totalPixels, double center, double scale, int eje){
 
     double result;
     double paso = scale/(double)totalPixels;

@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "Headers/file.h"
 
 
@@ -9,13 +5,6 @@
 #define BASE 10
 
 typedef enum {PGM, PPM} type_format;
-
-void save_with_format(type_format format, char* path, char* name, short **mp, int rows, int columns);
-
-void save_with_format_PGM(char* path, char* name, short **mp, int rows, int columns){
-    save_with_format(PGM, path, name, mp, rows, columns);
-    return;
-}
 
 void save_with_format(type_format format, char* path, char* name, short **mp, int rows, int columns){
     char aux[10] = "";
@@ -30,22 +19,23 @@ void save_with_format(type_format format, char* path, char* name, short **mp, in
         exit(1);
     }
     fputs("P2\n", f);
-    sprintf(aux,"%d",rows-1);
+    sprintf(aux,"%d",columns);
     fputs(aux, f);
     fputs(" ", f);
     aux[0] = '\0';
-    sprintf(aux,"%d", columns-1);
+    sprintf(aux,"%d", rows);
     fputs(aux, f);
     fputs("\n", f);
     aux[0] = '\0';
     fputs("255\n", f);
 
     if(format == PGM){
-        for(int i = 0; i < rows - 1; i++){
-            for(int j = 0; j < columns - 1; j++){
-                sprintf(aux,"%d",mp[i][j]);
-                if(j != columns - 2){
-                    strcat(aux,SPACE);
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < columns; j++){
+                sprintf(aux,"%d",mp[j][i]);
+                if(j != columns - 1){
+                    //strcat(aux,SPACE);
+                    strcat(aux," ");
                 }
                 fputs(aux, f);
                 aux[0] = '\0';
@@ -60,5 +50,12 @@ void save_with_format(type_format format, char* path, char* name, short **mp, in
     fclose(f);
     return;
 }
+
+
+void save_with_format_PGM(char* path, char* name, short **mp, int rows, int columns){
+    save_with_format(PGM, path, name, mp, rows, columns);
+    return;
+}
+
 
 

@@ -4,6 +4,6 @@
 #define __INPUT_HANDLER_H
 
 
-void GetParameterValues(int argc, char **argv, int *rowCount, int *colCount, int *width, int *height, Complex *center, Complex *seed);
+void GetParameterValues(int argc, char **argv, int *rowCount, int *colCount, double *width, double *height, Complex *center, Complex *seed);
 
 #endif
