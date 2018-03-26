@@ -1,27 +1,14 @@
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef __FILE_H_
+#define __FILE_H_
 
-
-#ifndef __FILE__
-#define __FILE__
-
-
-/*
-  Preconditions:
-   - path must exist
-   - name must exist
-   - mp must exist
-   - rows > 0
-   - columns > 0
-*/
+typedef enum {PGM, PPM} type_format;
 
 void save_with_format(type_format format, char* path, char* name, short **mp, int rows, int columns);
 void save_with_format_PGM(char* path, char* name, short **mp, int rows, int columns);
 
 
 
-#endif // __FILE__
+#endif
 
 

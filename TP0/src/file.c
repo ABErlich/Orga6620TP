@@ -1,10 +1,12 @@
 #include "Headers/file.h"
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define SPACE "     \0"
 #define BASE 10
 
-typedef enum {PGM, PPM} type_format;
+
 
 void save_with_format(type_format format, char* path, char* name, short **mp, int rows, int columns){
     char aux[10] = "";
