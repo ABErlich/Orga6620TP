@@ -13,6 +13,6 @@ void DestroyMatrixPointer(short** mp, int rows, int cols);
 void SetMatrixValue(short** mp, int row, int col, int value);
 
 // Obtiene el valor en la posicion de la matriz especificada
-int GetMatrixValue(short** mp, int row, int col);
+int GetMatrixValue(short** mp, int real, int img);
 
 #endif

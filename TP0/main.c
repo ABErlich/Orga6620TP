@@ -1,29 +1,26 @@
 #include <stdio.h>
-
+#include <string.h>
 #include "src/Headers/bool.h"
 #include "src/Headers/complex.h"
 #include "src/Headers/succession.h"
 #include "src/Headers/matrixHandler.h"
 #include "src/Headers/exportHandler.h"
 #include "src/Headers/inputHandler.h"
-#include "src/Headers/file.h"
-
 
 #define EJE_X 0
 #define EJE_Y 1
-
 
 Complex calculate(Complex f, Complex c);
 double MapPixel(double pixelNumber, int totalPixels, double center, double scale, int eje);
 
 int main (int argc, char **argv){
-    char path[30] = "./";
-    char name[30] = "tp0.pgm";
+    char path[SIZE_BUFF_PATH] = "./";
+    char name[SIZE_BUFF_NAME] = "tp0.pgm";
     int rowCount,colCount;
     Complex center,seed;
     double width,height;
 
-    GetParameterValues(argc,argv,&rowCount,&colCount,&width,&height,&center,&seed, &name);
+    GetParameterValues(argc,argv,&rowCount,&colCount,&width,&height,&center,&seed, name);
 
     double i,j;
     Complex f;
@@ -54,10 +51,12 @@ int main (int argc, char **argv){
 
     }
 
-
-    printToStdout(mp, rowCount, colCount);
-
-    save_with_format_PGM(path, name, mp, rowCount, colCount);
+    if(strcmp(name, "-") == 0){
+        printToStdout(mp, rowCount, colCount);
+    }
+    else{
+        save_with_format_PGM(path, name, mp, rowCount, colCount);
+    }
 
     DestroyMatrixPointer(mp, rowCount, colCount);
 
