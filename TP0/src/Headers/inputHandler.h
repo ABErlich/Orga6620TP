@@ -3,7 +3,6 @@
 #ifndef __INPUT_HANDLER_H
 #define __INPUT_HANDLER_H
 
-
 #define PLUS_OR_MINUS(c)  ((c) == '+' || (c) == '-')
 #define IMAGINARY_UNIT(x) ((x) == 'i' || (x) == 'j')
 #define MINIMUM(x, y) ((x) <= (y) ? (x) : (y))
@@ -17,6 +16,5 @@ void GetSeed(const char *, Complex *seed);
 void GetWidth(const char *, double *width);
 void GetHeight(const char *, double *height);
 void GetOutput(const char *, char *name, size_t n);
-
 
 #endif

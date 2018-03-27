@@ -55,8 +55,8 @@ void save_with_format(type_format format, char* path, char* name, short **mp, in
         }
     }
     else{
-
-
+        //TODO: IMPLEMENT PPM
+        return;
     }
     fclose(f);
     return;
