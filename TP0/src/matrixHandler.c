@@ -27,8 +27,8 @@ void SetMatrixValue(short** mp, int real, int img, int value){
     mp[real][img] = value;
 }
 
-int GetMatrixValue(short** mp, int row, int col){
-    return mp[row][col];
+int GetMatrixValue(short** mp, int real, int img){
+    return mp[real][img];
 }
 
 

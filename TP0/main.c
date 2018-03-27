@@ -6,12 +6,9 @@
 #include "src/Headers/matrixHandler.h"
 #include "src/Headers/exportHandler.h"
 #include "src/Headers/inputHandler.h"
-#include "src/Headers/file.h"
-
 
 #define EJE_X 0
 #define EJE_Y 1
-
 
 Complex calculate(Complex f, Complex c);
 double MapPixel(double pixelNumber, int totalPixels, double center, double scale, int eje);
@@ -55,7 +52,7 @@ int main (int argc, char **argv){
     }
 
 
-    printToStdout(mp, rowCount, colCount);
+    //printToStdout(mp, rowCount, colCount);
 
     save_with_format_PGM(path, name, mp, rowCount, colCount);
 
