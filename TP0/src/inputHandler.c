@@ -1,3 +1,7 @@
+#include <getopt.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "Headers/inputHandler.h"
 
 void GetParameterValues(int argc, char **argv, int *rowCount, int *colCount, double *width, double *height, Complex *center, Complex *seed, char *name){
@@ -21,10 +25,12 @@ void GetParameterValues(int argc, char **argv, int *rowCount, int *colCount, dou
 		{"seed", required_argument, NULL, 's'},
 		{"width", required_argument, NULL, 'w'},
 		{"Height", required_argument, NULL, 'H'},
-		{"output", required_argument, NULL, 'o'}
-	};
+		{"output", required_argument, NULL, 'o'},
+		{NULL, 0, NULL, 0}
+		};
+	//};
 
-	while ((ch = getopt_long(argc, argv, 
+	while ((ch = getopt_long(argc, argv,
 			         "s:c:H:o:r:w", options, &index)) != -1) {
 		switch (ch) {
 		case 'r':
@@ -73,15 +79,15 @@ static void GetResolution(const char *name, const char *spec, int *rowCount, int
 }
 static void GetCenter(const char *name, const char *spec, Complex *center)
 {
-	double width;
-	double height;
+	/*double width;*/
+	/*double height;*/
 	double re, im;
 	char ii;
 	char sg;
 	char ch;
 
-	if (sscanf(spec, 
-	           "%lf %c %lf %c %c", 
+	if (sscanf(spec,
+	           "%lf %c %lf %c %c",
 	           &re,
 	           &sg,
 	           &im,
@@ -102,11 +108,11 @@ static void GetHeight(const char *name, const char *spec, double *height)
 
 	char ch;
 
-	if (sscanf(spec, 
-	           "%lf %c", 
+	if (sscanf(spec,
+	           "%lf %c",
 	           height,
 	           &ch) != 1
-	    || height <= 0.0) {
+	    || *height <= 0.0) {
 		fprintf(stderr, "invalid height specification.\n");
 		exit(1);
 	}
@@ -116,17 +122,17 @@ static void GetWidth(const char *name, const char *spec, double *width)
 {
 	char ch;
 
-	if (sscanf(spec, 
-	           "%lf %c", 
+	if (sscanf(spec,
+	           "%lf %c",
 	           width,
 	           &ch) != 1
-	    || width <= 0.0) {
+	    || *width <= 0.0) {
 		fprintf(stderr, "invalid width specification.\n");
 		exit(1);
 	}
 }
 
-static void GetOutput(const char *name, const char *spec, char *name)
+static void GetOutput(const char *output, const char *spec, char *name)
 {
 	if (output != NULL) {
 		fprintf(stderr, "multiple do output files.");
@@ -134,13 +140,14 @@ static void GetOutput(const char *name, const char *spec, char *name)
 	}
 
 	if (strcmp(spec, "-") == 0) {
-		output = stdout;
-	} else {
+		output = (const char *)stdout;
+	}
+	/* else {
 		if (!(output = fopen(spec, "w"))) {
 			fprintf(stderr, "cannot open output file.\n");
 			exit(1);
 		}
-	}
+	}*/
 }
 
 static void GetSeed(const char *name, const char *spec, Complex *seed)
@@ -150,8 +157,8 @@ static void GetSeed(const char *name, const char *spec, Complex *seed)
 	char sg;
 	char ch;
 
-	if (sscanf(spec, 
-	           "%lf %c %lf %c %c", 
+	if (sscanf(spec,
+	           "%lf %c %lf %c %c",
 	           &re,
 	           &sg,
 	           &im,

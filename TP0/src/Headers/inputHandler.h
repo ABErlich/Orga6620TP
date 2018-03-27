@@ -12,6 +12,6 @@ static void GetResolution(const char *, const char *, int *rowCount, int *colCou
 static void GetCenter(const char *, const char *, Complex *center);
 static void GetSeed(const char *, const char *, Complex *seed);
 static void GetWidth(const char *, const char *, double *width);
-static void GetWeight(const char *, const char *, double *height);
+static void GetHeight(const char *, const char *, double *height);
 static void GetOutput(const char *, const char *, char *name);
 #endif
