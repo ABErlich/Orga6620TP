@@ -16,7 +16,7 @@ void GetCenter(const char *, Complex *center);
 void GetSeed(const char *, Complex *seed);
 void GetWidth(const char *, double *width);
 void GetHeight(const char *, double *height);
-void GetOutput(const char *, char *name);
+void GetOutput(const char *, char *name, size_t n);
 
 
 #endif

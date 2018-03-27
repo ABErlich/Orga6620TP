@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Headers/inputHandler.h"
+#include "Headers/exportHandler.h"
 
 void GetParameterValues(int argc, char **argv, int *rowCount, int *colCount, double *width, double *height, Complex *center, Complex *seed, char *name){
 
@@ -23,14 +24,14 @@ void GetParameterValues(int argc, char **argv, int *rowCount, int *colCount, dou
 		{"resolution", required_argument, NULL, 'r'},
 		{"center", required_argument, NULL, 'c'},
 		{"seed", required_argument, NULL, 's'},
-		{"width", required_argument, NULL, 'W'},
+		{"width", required_argument, NULL, 'w'},
 		{"Height", required_argument, NULL, 'H'},
 		{"output", required_argument, NULL, 'o'},
 		{NULL, 0, NULL, 0}
 	};
 
 	while ((ch = getopt_long(argc, argv,
-			         "s:c:H:o:r:w", options, &index)) != -1) {
+			         "s:c:H:o:r:w:", options, &index)) != -1) {
 		switch (ch) {
 		case 'r':
 			GetResolution(optarg, rowCount, colCount);
@@ -48,15 +49,10 @@ void GetParameterValues(int argc, char **argv, int *rowCount, int *colCount, dou
 			GetHeight(optarg, height);
 			break;
 		case 'o':
-			GetOutput(optarg, name);
+			GetOutput(optarg, name, SIZE_BUFF_NAME);
 			break;
 		}
 	}
-
-	// if (!*name) {
-	// 	fprintf(stderr, "no output file.\n");
-	// 	exit(1);
-	// }
 
 }
 
@@ -112,6 +108,7 @@ void GetWidth(const char *spec, double *width) {
 		fprintf(stderr, "invalid width specification.\n");
 
 	}
+	*width = wh;
 }
 
 void GetHeight(const char *spec, double *height){
@@ -124,27 +121,13 @@ void GetHeight(const char *spec, double *height){
 	           &ch) != 1
 	    || *height <= 0.0) {
 		fprintf(stderr, "invalid height specification.\n");
-		exit(1);
 	}
 }
 
 
 
-void GetOutput(const char *spec, char *name){
-//	if (output != NULL) {
-//		fprintf(stderr, "multiple do output files.");
-//		exit(1);
-//	}
-//
-//	if (strcmp(spec, "-") == 0) {
-//		output = (const char *)stdout;
-//	}
-//	/* else {
-//		if (!(output = fopen(spec, "w"))) {
-//			fprintf(stderr, "cannot open output file.\n");
-//			exit(1);
-//		}
-//	}*/
+void GetOutput(const char *spec, char *name, size_t n){
+	strncpy(name, spec, n);
 }
 
 void GetSeed(const char *spec, Complex *seed) {
@@ -170,7 +153,6 @@ void GetSeed(const char *spec, Complex *seed) {
 	    || !PLUS_OR_MINUS(sg)
 	    || !IMAGINARY_UNIT(imgNumber)) {
 		fprintf(stderr, "invalid seed specification.\n");
-		exit(1);
 	}
 
 	img *= SIGN(sg);
