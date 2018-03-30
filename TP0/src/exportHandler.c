@@ -28,7 +28,7 @@ void save_with_format(type_format format, char* path, char* name, short **mp, in
     char aux[10] = "";
     char buff[500] = "";
     char buff_header[200] = "";
-
+	int j, i;
     FILE * f;
     strcat(buff,path);
     strcat(buff,name);
@@ -42,8 +42,8 @@ void save_with_format(type_format format, char* path, char* name, short **mp, in
     fputs(buff_header, f);
 
     if(format == PGM){
-        for(int i = 0; i < rows; i++){
-            for(int j = 0; j < columns; j++){
+        for(i = 0; i < rows; i++){
+            for(j = 0; j < columns; j++){
                 sprintf(aux,"%d", GetMatrixValue(mp, j, i));
                 if(j != columns - 1){
                     strcat(aux," ");
