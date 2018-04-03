@@ -98,17 +98,15 @@ void GetCenter(const char *spec, Complex *center){
 
 void GetWidth(const char *spec, double *width) {
 	char ch;
-	double wh;
 
 	if (sscanf(spec,
 	           "%lf %c",
-	           &wh,
+	           width,
 	           &ch) != 1
 	    || *width <= 0.0) {
 		fprintf(stderr, "invalid width specification.\n");
 
 	}
-	*width = wh;
 }
 
 void GetHeight(const char *spec, double *height){
