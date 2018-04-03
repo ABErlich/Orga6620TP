@@ -5,10 +5,11 @@ short** GetMatrixPointer(int rows, int cols){
     int i;
 
     mp = (short **)malloc(cols * sizeof(short *));
-    for(i = 0; i < cols; i++){
-        mp[i] = (short *)malloc(rows * sizeof(short));
-    }
-
+	if(mp != NULL){
+		for(i = 0; i < cols; i++){
+		    mp[i] = (short *)malloc(rows * sizeof(short));
+		}
+	}
     return mp;
 }
 

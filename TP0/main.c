@@ -22,26 +22,31 @@ int main (int argc, char **argv){
     short iterationCount = 0;
     short **mp = GetMatrixPointer(rowCount, colCount);
     /* Iteracion sobre todos los pixeles de la imagen */
-    for(i = 0; i < rowCount; i++){
-        for(j = 0; j < colCount; j++){
-            f.real = MapPixel(j+1, colCount, center.real, width, EJE_X);
-            f.img = MapPixel(i+1, rowCount, center.img, height, EJE_Y);
-            /* Sucesion de numeros hasta cumplir la condicion de corte */
-            result = f;
-            while (Module(result) < 2 && iterationCount < 255) {
-                result = CalculateNext(result, seed, fc);
-                iterationCount++;
-            } /* La condicion < 2 es la que impone el punto de corte para el calculo de la sucesion*/
-            SetMatrixValue(mp, (int)j, (int)i, iterationCount);
-            iterationCount = 0;
-        }
-    }
-    if(strcmp(name, "-") == 0){
-        printToStdout(mp, rowCount, colCount);
-    }
-    else{
-        save_with_format_PGM(path, name, mp, rowCount, colCount);
-    }
-    DestroyMatrixPointer(mp, rowCount, colCount);
-    return 0;
+	if(mp != NULL){ 
+		for(i = 0; i < rowCount; i++){
+		    for(j = 0; j < colCount; j++){
+		        f.real = MapPixel(j+1, colCount, center.real, width, EJE_X);
+		        f.img = MapPixel(i+1, rowCount, center.img, height, EJE_Y);
+		        /* Sucesion de numeros hasta cumplir la condicion de corte */
+		        result = f;
+		        while (Module(result) < 2 && iterationCount < 255) {
+		            result = CalculateNext(result, seed, fc);
+		            iterationCount++;
+		        } /* La condicion < 2 es la que impone el punto de corte para el calculo de la sucesion*/
+		        SetMatrixValue(mp, (int)j, (int)i, iterationCount);
+		        iterationCount = 0;
+		    }
+		}
+		if(strcmp(name, "-") == 0){
+		    printToStdout(mp, rowCount, colCount);
+		}
+		else{
+		    save_with_format_PGM(path, name, mp, rowCount, colCount);
+		}
+		DestroyMatrixPointer(mp, rowCount, colCount);
+		return 0;
+	}
+	fprintf(stderr, "An error has occurred, try again.\n");
+	exit(1);
+
 }

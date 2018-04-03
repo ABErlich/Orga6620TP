@@ -65,9 +65,10 @@ void GetResolution(const char *spec, int *rowCount, int *colCount){
 	if (sscanf(spec, "%d%c%d %c", &cols, &c, &rows, &d) != 3
 	    || cols <= 0
 	    || c != 'x'
-	    || rows <= 0)
-		printf("Error while parsing the resolution \n");
-
+	    || rows <= 0){
+		printf("The resolution specification is invalid\n");
+		exit(1);
+	}
 	*rowCount = rows;
 	*colCount = cols;
 }
@@ -87,7 +88,7 @@ void GetCenter(const char *spec, Complex *center){
 	           &ch) != 4
 	    || !PLUS_OR_MINUS(sign)
 	    || !IMAGINARY_UNIT(imgNumber)) {
-		fprintf(stderr, "invalid center specification.\n");
+		fprintf(stderr, "The center specification is invalid.\n");
 		exit(1);
 	}
 
@@ -104,8 +105,8 @@ void GetWidth(const char *spec, double *width) {
 	           width,
 	           &ch) != 1
 	    || *width <= 0.0) {
-		fprintf(stderr, "invalid width specification.\n");
-
+		fprintf(stderr, "The width specification is invalid.\n");
+		exit(1);
 	}
 }
 
@@ -118,7 +119,8 @@ void GetHeight(const char *spec, double *height){
 	           height,
 	           &ch) != 1
 	    || *height <= 0.0) {
-		fprintf(stderr, "invalid height specification.\n");
+		fprintf(stderr, "The height specification is invalid.\n");
+		exit(1);	
 	}
 }
 
@@ -150,7 +152,8 @@ void GetSeed(const char *spec, Complex *seed) {
 	           &ch) != 4
 	    || !PLUS_OR_MINUS(sg)
 	    || !IMAGINARY_UNIT(imgNumber)) {
-		fprintf(stderr, "invalid seed specification.\n");
+		fprintf(stderr, "The seed specification is invalid.\n");
+		exit(1);
 	}
 
 	img *= SIGN(sg);
