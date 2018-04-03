@@ -44,3 +44,4 @@ double Module(Complex number){
 
     return result;
 }
+

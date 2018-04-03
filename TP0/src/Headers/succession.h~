@@ -6,4 +6,3 @@
 Complex CalculateNext(Complex f, Complex c, Complex calculateFunc (Complex, Complex));
 
 #endif
-

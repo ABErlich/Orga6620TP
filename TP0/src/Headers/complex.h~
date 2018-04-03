@@ -13,4 +13,3 @@ Complex Add(Complex a, Complex b);
 double Module(Complex number);
 
 #endif
-
