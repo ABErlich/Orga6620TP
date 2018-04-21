@@ -5,5 +5,7 @@
 extern void
 nop();
 
+extern void
+caller_nop();
 
 #endif
