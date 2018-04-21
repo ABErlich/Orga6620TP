@@ -1,5 +1,4 @@
 #include <mips/regdef.h>
-#include <sys/syscall.h>
 #define SIZE_SF 32
 #define OFFSET_RA 24
 #define OFFSET_FP 20
@@ -23,12 +22,16 @@
                             #  4+----+
                             #   |(a0)|
                             #  0------
+    .rdata
+    .align 2
+arg_sp:
+    .ascii "%u \000"
     .text                   #Seccion de instrucciones.
     .abicalls
     .align 2                #Instrucciones alineadas en 4bytes.
-    .global my_print        #Accedida en cualquier parte.
-    .ent my_print
-my_print: 
+    .global convert_to_str  #Accedida en cualquier parte.
+    .ent convert_to_str
+convert_to_str: 
     .frame $fp, SIZE_SF, ra
     .set noreorder
     .cpload t9
@@ -40,14 +43,14 @@ my_print:
     move $fp, sp
     sw a0, OFFSET_A0($fp) 
     sw a1, OFFSET_A1($fp)   #end: stack frame
-    li a0, 1                #begin: syscall
-    lw a1, OFFSET_A0($fp)
+    lw a0, OFFSET_A0($fp)   #begin: caller
+    la a1, arg_sp
     lw a2, OFFSET_A1($fp)
-    li v0, SYS_write                  
-    syscall                 #end: syscall
+    la t9, sprintf         
+    jal t9                  #begin: caller
     lw gp, OFFSET_GP($fp)   #begin: return
     lw $fp, OFFSET_FP(sp)
     lw ra, OFFSET_RA(sp)
     addiu sp, sp, SIZE_SF
     jr  ra                  #end: return
-    .end my_print
+    .end convert_to_str
