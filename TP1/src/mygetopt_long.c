@@ -36,7 +36,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <defs.h>
+#include "defs.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
@@ -107,7 +107,7 @@ gcd(a, b)
 		b = c;
 		c = a % b;
 	}
-	   
+
 	return b;
 }
 
@@ -206,7 +206,7 @@ start:
 			place = EMSG;
 			if (IN_ORDER) {
 				/*
-				 * GNU extension: 
+				 * GNU extension:
 				 * return non-option as argument to option 1
 				 */
 				optarg = nargv[optind++];
@@ -254,7 +254,7 @@ start:
 	}
 	if (optchar == 'W' && oli[1] == ';') {		/* -W long-option */
 		/* XXX: what if no long options provided (called by getopt)? */
-		if (*place) 
+		if (*place)
 			return -2;
 
 		if (++optind >= nargc) {	/* no arg */
@@ -385,7 +385,7 @@ getopt_long(nargc, nargv, options, long_options, idx)
 			has_equal++;
 		} else
 			current_argv_len = strlen(current_argv);
-	    
+
 		for (i = 0; long_options[i].name; i++) {
 			/* find matching long option */
 			if (strncmp(current_argv, long_options[i].name,
@@ -474,7 +474,7 @@ getopt_long(nargc, nargv, options, long_options, idx)
 		if (long_options[match].flag) {
 			*long_options[match].flag = long_options[match].val;
 			retval = 0;
-		} else 
+		} else
 			retval = long_options[match].val;
 		if (idx)
 			*idx = match;

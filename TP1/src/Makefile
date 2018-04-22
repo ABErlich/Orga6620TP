@@ -1,18 +1,38 @@
-# Usage: 
-#	make makefiles [CC=compiler] [OPT=compiler-flags] [DEBUG=debug-flags]
-#
-# The defaults are: CC=gcc, OPT=-O, and DEBUG=-g. Examples:
-#
-#	make makefiles
-#	make makefiles CC="purify cc"
-#	make makefiles CC=cc OPT=
-#
-SHELL   = /bin/sh
+# Do not edit -- this file documents how this program was built for your machine.
+SYSTYPE	= LINUX4
+SYSLIBS	= -lm
+CC	= gcc $(WARN) 
+OPT	= -O
+DEBUG	= -g
+EXPORT	= AUXLIBS='' CCARGS='' OPT='-O' DEBUG='-g'
+WARN	= -Wall
+SHELL	= /bin/sh
+DEFS    = -I. -D$(SYSTYPE)
+CFLAGS  = $(DEBUG) $(OPT) $(DEFS)
+OPTS	= 'CC=$(CC)'
+HDRS    = debug.h defs.h mygetopt.h param.h
+SRCS	= mips32_plot.c main.c mygetopt_long.c generic_plot.c
+PROG	= tp1
 
-default: update
+$(PROG): $(SRCS) $(HDRS)
+	$(CC) $(CFLAGS) -o $@ $(SRCS) $(SYSLIBS)
 
-update depend clean: Makefiles
-	$(MAKE) MAKELEVEL= $@
+update: $(PROG)
+	:
 
 makefiles Makefiles:
-	$(MAKE) -f Makefile.in MAKELEVEL= Makefiles
+	(echo "# Do not edit -- this file documents how this program was built for your machine."; $(SHELL) makedefs) >makedefs.tmp
+	set +e;                                \
+	if cmp makedefs.tmp makedefs.out; then \
+	    rm makedefs.tmp;                   \
+	else                                   \
+	    mv makedefs.tmp makedefs.out;      \
+	fi >/dev/null 2>/dev/null
+	rm -f Makefile; (cat makedefs.out Makefile.in) >Makefile
+
+clean:
+	rm -f Makefile
+	cp Makefile.init Makefile
+	rm -f bin/[!CRS]* lib/[!CRS]* include/[!CRS]* libexec/[!CRS]*     \
+	      junk *core .nfs* .pure *.out *.out.* *.tmp *.a *~ *- *.orig \
+	      *.t *.o *.bak make.err *.gmon $(PROG)

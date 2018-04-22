@@ -3,9 +3,9 @@
 #include <string.h>
 #include <stdio.h>
 
-#include <defs.h>
-#include <debug.h>
-#include <param.h>
+#include "defs.h"
+#include "debug.h"
+#include "param.h"
 
 #ifndef VERSION
 #define VERSION "0.0.1-cvs"
@@ -25,9 +25,10 @@
 
 static void do_plot(void);
 extern void mips32_plot(param_t *);
+extern void generic_plot(param_t *);
 
 /*
- * Parámetros globales.
+ * Parï¿½metros globales.
  */
 
 int x_res = 640;		/* Ancho de imagen por defecto. */
@@ -52,18 +53,14 @@ static void do_height(const char *, const char *);
 static void do_method(const char *, const char *);
 static void do_output(const char *, const char *);
 
-int
-main(int argc, char * const argv[], char * const envp[])
-{
+int main(int argc, char * const argv[], char * const envp[]) {
 	parse_cmdline(argc, argv);
 	do_plot();
 
 	return 0;
 }
 
-static void
-parse_cmdline(int argc, char * const argv[])
-{
+static void parse_cmdline(int argc, char * const argv[]) {
 	int ch;
 	int index = 0;
 
@@ -78,7 +75,7 @@ parse_cmdline(int argc, char * const argv[])
 		{"output", required_argument, NULL, 'o'},
 	};
 
-	while ((ch = getopt_long(argc, argv, 
+	while ((ch = getopt_long(argc, argv,
 	                         "hc:H:m:o:r:w:g:V", options, &index)) != -1) {
 		switch (ch) {
 		case 'h':
@@ -120,9 +117,7 @@ parse_cmdline(int argc, char * const argv[])
 		output = stdout;
 }
 
-static void
-do_usage(const char *name, int status)
-{
+static void do_usage(const char *name, int status) {
 	fprintf(stderr, "Usage:\n");
 	fprintf(stderr, "  %s -h\n", name);
 	fprintf(stderr, "  %s -V\n", name);
@@ -145,16 +140,12 @@ do_usage(const char *name, int status)
 	exit(status);
 }
 
-static void
-do_version(const char *name)
-{
+static void do_version(const char *name) {
 	fprintf(stderr, "%s\n", VERSION);
 	exit(0);
 }
 
-static void
-do_resolution(const char *name, const char *spec)
-{
+static void do_resolution(const char *name, const char *spec){
 	int x;
 	int y;
 	char c;
@@ -171,9 +162,7 @@ do_resolution(const char *name, const char *spec)
 	y_res = y;
 }
 
-static void
-do_geometry(const char *name, const char *spec)
-{
+static void do_geometry(const char *name, const char *spec){
 	double re_1, im_1;
 	double re_2, im_2;
 	char comma;
@@ -186,8 +175,8 @@ do_geometry(const char *name, const char *spec)
 #define PLUS_OR_MINUS(c)  ((c) == '+' || (c) == '-')
 #define IMAGINARY_UNIT(x) ((x) == 'i' || (x) == 'j')
 
-	if (sscanf(spec, 
-	           "%lf %c %lf %c %c %lf %c %lf %c %c", 
+	if (sscanf(spec,
+	           "%lf %c %lf %c %c %lf %c %lf %c %c",
 	           &re_1,
 	           &sg_1,
 	           &im_1,
@@ -216,7 +205,7 @@ do_geometry(const char *name, const char *spec)
 	im_2 *= SIGN(sg_2);
 
 	/*
-	 * We have two edges of the rectangle. Now, find the upper-left 
+	 * We have two edges of the rectangle. Now, find the upper-left
 	 * (i.e. the one with minimum real part and maximum imaginary
 	 * part) and lower-right (maximum real part, minimum imaginary)
 	 * corners of the rectangle.
@@ -227,9 +216,7 @@ do_geometry(const char *name, const char *spec)
 	lower_right_im = MINIMUM(im_1, im_2);
 }
 
-static void
-do_center(const char *name, const char *spec)
-{
+static void do_center(const char *name, const char *spec) {
 	double width;
 	double height;
 	double re, im;
@@ -237,8 +224,8 @@ do_center(const char *name, const char *spec)
 	char sg;
 	char ch;
 
-	if (sscanf(spec, 
-	           "%lf %c %lf %c %c", 
+	if (sscanf(spec,
+	           "%lf %c %lf %c %c",
 	           &re,
 	           &sg,
 	           &im,
@@ -260,16 +247,14 @@ do_center(const char *name, const char *spec)
 	lower_right_im = im - height / 2;
 }
 
-static void
-do_height(const char *name, const char *spec)
-{
+static void do_height(const char *name, const char *spec) {
 	double width;
 	double height;
 	double re, im;
 	char ch;
 
-	if (sscanf(spec, 
-	           "%lf %c", 
+	if (sscanf(spec,
+	           "%lf %c",
 	           &height,
 	           &ch) != 1
 	    || height <= 0.0) {
@@ -287,16 +272,14 @@ do_height(const char *name, const char *spec)
 	lower_right_im = im - height / 2;
 }
 
-static void
-do_width(const char *name, const char *spec)
-{
+static void do_width(const char *name, const char *spec) {
 	double width;
 	double height;
 	double re, im;
 	char ch;
 
-	if (sscanf(spec, 
-	           "%lf %c", 
+	if (sscanf(spec,
+	           "%lf %c",
 	           &width,
 	           &ch) != 1
 	    || width <= 0.0) {
@@ -314,16 +297,18 @@ do_width(const char *name, const char *spec)
 	lower_right_im = im - height / 2;
 }
 
-static void
-do_method(const char *name, const char *spec)
-{
-	fprintf(stderr, "do_method: notyet\n");
-	exit(1);
+static void do_method(const char *name, const char *spec) {
+	if(strcmp(spec, "generic") == 0){
+		plot = &generic_plot;
+	}else if(strcmp(spec, "mips32") == 0){
+		plot = &mips32_plot;
+	}else{
+		fprintf(stderr, "calculation method was not specified.\n");
+		exit(1);
+	}
 }
 
-static void
-do_output(const char *name, const char *spec)
-{
+static void do_output(const char *name, const char *spec) {
 	if (output != NULL) {
 		fprintf(stderr, "multiple do output files.");
 		exit(1);
@@ -339,9 +324,7 @@ do_output(const char *name, const char *spec)
 	}
 }
 
-static void
-do_plot(void)
-{
+static void do_plot(void) {
 	param_t parms;
 
 	memset(&parms, 0, sizeof(parms));
@@ -349,14 +332,14 @@ do_plot(void)
 	parms.UL_im = upper_left_im;
 	parms.LR_re = lower_right_re;
 	parms.LR_im = lower_right_im;
-        parms.d_re = (lower_right_re - upper_left_re) / x_res;
-        parms.d_im = (upper_left_im - lower_right_im) / y_res;
-        parms.s_re = seed_re;
+	parms.d_re = (lower_right_re - upper_left_re) / x_res;
+	parms.d_im = (upper_left_im - lower_right_im) / y_res;
+	parms.s_re = seed_re;
 	parms.s_im = seed_im;
 	parms.x_res = x_res;
-        parms.y_res = y_res;
-        parms.shades = 256;
-        parms.fp = output;
+	parms.y_res = y_res;
+	parms.shades = 256;
+	parms.fp = output;
 
 	plot(&parms);
 }
