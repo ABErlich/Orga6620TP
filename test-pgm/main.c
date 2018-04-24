@@ -1,21 +1,16 @@
-#include <stdio.h>/*
-#include "helper.h"
-#include "aux.h"*/
+#include <stdio.h>
+#include "mips32_stdio.h"
+#include "mips32_save_buff.h"
 
 int
 main(int argc, char* const argv[]){
-    /*char p[5];
-    FILE* t;
-    printf("hola mundo \n");
-    nop();
-    caller_nop();
-    my_print("a", 1);
-    my_print("\n", 1);
-    convert_to_str(p, (unsigned)100);
-    //my_write(stdout, p, 5);
-    t = fopen("hola.txt", "w");
-    my_write(t, p, 5);
-    my_close(t);
-    mips32_fprintf(stdout, "hola");*/
+    count_buff = 0;
+    mips32_save_buff("hola");
+    printf("%d\n",count_buff);
+    printf("%s\n",mips32_buff[0]);
+
+    mips32_save_buff("P2\n");
+    printf("%d\n",count_buff);
+    printf("%s\n",mips32_buff[1]);
     return 0;
 }
