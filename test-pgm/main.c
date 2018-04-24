@@ -1,9 +1,10 @@
-#include <stdio.h>
+#include <stdio.h>/*
 #include "helper.h"
+#include "aux.h"*/
 
 int
 main(int argc, char* const argv[]){
-    char p[5];
+    /*char p[5];
     FILE* t;
     printf("hola mundo \n");
     nop();
@@ -15,5 +16,6 @@ main(int argc, char* const argv[]){
     t = fopen("hola.txt", "w");
     my_write(t, p, 5);
     my_close(t);
+    mips32_fprintf(stdout, "hola");*/
     return 0;
 }

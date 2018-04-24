@@ -1,3 +1,4 @@
+#include <stdio.h>
 #ifndef __AUX__
 #define __AUX__
 
