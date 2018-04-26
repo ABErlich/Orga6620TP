@@ -15,6 +15,8 @@ shades: .word
 centerReal: .word
 centerImg: .word
 fileNumber: .word
+pointReal: .word
+pointImg: .word
 
 .text
 .globl mips32_plot
@@ -46,46 +48,69 @@ mips32_plot:
 		lw centerImg, 40(a0)
 		lw fileNumber, 44(a0)
 		
-		# ACA SE DEBERIA IMPRIMIR EL HEADER
+		#########################ACA SE DEBERIA IMPRIMIR EL HEADER#####################################
 		
 y:	0
 x:	0
 c:	0
-	
+
+addu pointImg, upperLeftImg, zero	
+addu x, zero, zero
 #Loop sobre eje imaginario
 LoopImg:
-		bneg 
-		# Si se cumple la cond
+		bge resolutionY, y, EndLoop
 		
+		
+		# Inicializo variables para el loop interno
+		subu pointReal, upperLeftReal
+		addu x, zero, zero
+		b LoopReal
 		
 		addu y, y, 1
+		subu pointImg, pointImg, stepImg
+		
 		b LoopImg
-EndLoop:
-		b EndLoop
 
-#Loop sobre eje real	
+#Loop sobre eje real
 LoopReal:
-		bneg
-		# Si se cumple la cond
-	
+		bge resolutionX, x, EndLoopReal
+		
+		addu c, zero, zero
+		b LoopPixel
 	
 		addu x, x, 1
+		addu pointReal, pointReal, stepReal
 		b LoopReal
-EndLoopReal:
-		b LoopImg
-	
 	
 #Loop en cada punto
 LoopPixel:
-		bneg
+		jal calculateMod
+		bge c, shades, EndLoopPixel
 		# Si se cumple la condicion
-		#ACA DEBERIA IMPRIMIR EL NUMERO
-	
 		
+		
+		################ACA DEBERIA IMPRIMIR EL NUMERO##########################
+	
+		addu c, c, 1
 		b LoopPixel
+		
+		
+
+		
 EndLoopPixel:
 		b LoopReal
+
+EndLoopReal:
+		b LoopImg
+
 		
+calculateMod:
+		
+		
+		
+		
+		
+		jr $ra
 		
 		
 EndLoop:
