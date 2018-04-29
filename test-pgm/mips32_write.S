@@ -27,9 +27,9 @@
     .text                   #Seccion de instrucciones.
     .abicalls
     .align 2                #Instrucciones alineadas en 4bytes.
-    .global my_write        #Accedida en cualquier parte.
-    .ent my_write
-my_write: 
+    .global mips32_write    #Accedida en cualquier parte.
+    .ent mips32_write
+mips32_write: 
     .frame $fp, SIZE_SF, ra
     .set noreorder
     .cpload t9
@@ -53,4 +53,4 @@ my_write:
     lw ra, OFFSET_RA(sp)
     addiu sp, sp, SIZE_SF
     jr  ra                  #end: return
-    .end my_write
+    .end mips32_write
