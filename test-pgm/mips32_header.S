@@ -30,6 +30,8 @@
     .align 2
 header:
     .ascii "P2\n\000"
+space:
+    .ascii " \000"
     .text                   #Seccion de instrucciones.
     .abicalls
     .align 2                #Instrucciones alineadas en 4bytes.
@@ -61,7 +63,30 @@ mips32_header:
     lw a0, OFFSET_A0($fp)
     lw a1, OFFSET_A1($fp)
     move a2, v0
+    sub a2, a2, 1           #le resto 1 para no imprimir \n
     jal mips32_write        #end: print x_res
+    lw a0, OFFSET_A0($fp)   #begin: print space
+    la a1, space
+    li a2, 1
+    jal mips32_write        #end: print space
+    lw a0, OFFSET_A2($fp)   #begin: print y_res
+    jal mips32_to_str
+    move a0, v0
+    sw a0, OFFSET_A2($fp)
+    jal mips32_length
+    lw a0, OFFSET_A0($fp)
+    lw a1, OFFSET_A2($fp)
+    move a2, v0
+    jal mips32_write        #end: print y_res
+    lw a0, OFFSET_A3($fp)   #begin: print shades
+    jal mips32_to_str
+    move a0, v0
+    sw a0, OFFSET_A3($fp)
+    jal mips32_length
+    lw a0, OFFSET_A0($fp)
+    lw a1, OFFSET_A3($fp)
+    move a2, v0
+    jal mips32_write        #end: print shades
     lw gp, OFFSET_GP($fp)   #begin: return
     lw $fp, OFFSET_FP(sp)
     lw ra, OFFSET_RA(sp)

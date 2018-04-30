@@ -8,8 +8,17 @@
 int
 main(int argc, char* const argv[]){
     //mips32_write(stdout, "P2\n",4);
-    mips32_header(stdout, 255, 30, 255);
+    //mips32_header(stdout, 255, 30, 255);
     
+    length = 0;
+    mips32_save("255\n\000");
+    mips32_save("45\n\000");
+    mips32_save("2\n\000");
+
+    printf("length: %d\n",length);
+    mips32_fflush(stdout);
+    printf("length: %d\n",length);
+
     //printf("%d",mips32_length("150\n\000"));
     /*
     size_t c = 241;
