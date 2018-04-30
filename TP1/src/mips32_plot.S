@@ -3,23 +3,30 @@
 
 .data
 
-upperLeftReal: .word
-upperLeftImg: .word
+#Aca podria inicializarlos con un valor default por las dudas que la inicializacion en C no funcione
+
+upperLeftReal: 	.word
+upperLeftImg: 	.word
 lowerRightReal: .word
-lowerRightImg: .word
-stepReal: .word
-stepImg: .word
-resolutionX: .word
-resolutionY: .word
-shades: .word
-centerReal: .word
-centerImg: .word
-fileNumber: .word
-pointReal: .word
-pointImg: .word
+lowerRightImg: 	.word
+stepReal: 		.float
+stepImg: 		.float
+resolutionX: 	.word
+resolutionY: 	.word
+shades: 		.word
+centerReal: 	.word
+centerImg: 		.word
+fileNumber: 	.word
+pointReal: 		.word
+pointImg: 		.word
+y:				.word 0
+x:				.word 0
+c:				.word 0
+
 
 .text
 .globl mips32_plot
+.ent mips32_plot
 
 mips32_plot: 
 		#Inicializo el StackFrame
@@ -49,18 +56,19 @@ mips32_plot:
 		lw fileNumber, 44(a0)
 		
 		#########################ACA SE DEBERIA IMPRIMIR EL HEADER#####################################
-		
-y:	0
-x:	0
-c:	0
 
-addu pointImg, upperLeftImg, zero	
-addu x, zero, zero
+
+		addu pointImg, upperLeftImg, zero	
+		addu x, zero, zero
+
+		b LoopImg
+
+.end mips32_plot
+
 #Loop sobre eje imaginario
 LoopImg:
-		bge resolutionY, y, EndLoop
-		
-		
+		bge resolutionY, y, End_mips32_plot
+			
 		# Inicializo variables para el loop interno
 		subu pointReal, upperLeftReal
 		addu x, zero, zero
@@ -70,6 +78,9 @@ LoopImg:
 		subu pointImg, pointImg, stepImg
 		
 		b LoopImg
+
+.end LoopImg
+
 
 #Loop sobre eje real
 LoopReal:
@@ -82,9 +93,14 @@ LoopReal:
 		addu pointReal, pointReal, stepReal
 		b LoopReal
 	
+.end LoopReal
+
+
 #Loop en cada punto
 LoopPixel:
 		jal calculateMod
+
+		bge $v0, 4, EndLoopPixel
 		bge c, shades, EndLoopPixel
 		# Si se cumple la condicion
 		
@@ -94,28 +110,27 @@ LoopPixel:
 		addu c, c, 1
 		b LoopPixel
 		
-		
+.end LoopPixel		
 
 		
 EndLoopPixel:
 		b LoopReal
 
+.end EndLoopPixel
+
 EndLoopReal:
 		b LoopImg
 
+.end EndLoopReal
 		
 calculateMod:
-		
-		
-		
-		
-		
 		jr $ra
+.end calculateMod
 		
-		
-EndLoop:
-	
-		
+End_mips32_plot:
+	li $v0, 10
+	syscall
+.end End_mips32_plot
 	
 	
 	
