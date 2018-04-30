@@ -1,39 +1,14 @@
 #include <stdio.h>
 #include "helper.h"
 #include "mips32_stdio.h"
-/*
-#include "mips32_save_buff.h"
-*/
 
 int
 main(int argc, char* const argv[]){
-    //mips32_write(stdout, "P2\n",4);
-    //mips32_header(stdout, 255, 30, 255);
-    
-    length = 0;
-    mips32_save("255\n\000");
-    mips32_save("45\n\000");
-    mips32_save("2\n\000");
-
-    printf("length: %d\n",length);
+    int i;
+    mips32_header(stdout, (unsigned)255, (unsigned)30, (unsigned)255);
+    for(i=0; i<=255; i++){
+        mips32_fprintf(stdout,(unsigned)i);
+    }
     mips32_fflush(stdout);
-    printf("length: %d\n",length);
-
-    //printf("%d",mips32_length("150\n\000"));
-    /*
-    size_t c = 241;
-    char* str = mips32_to_str((unsigned)c);
-    printf("%s", str);
-    
-    count_buff = 0;
-    mips32_save_buff("hola");
-    printf("%d\n",count_buff);
-    printf("%s\n",mips32_buff[0]);
-
-    mips32_save_buff("P2\n");
-    printf("%d\n",count_buff);
-    printf("%s\n",mips32_buff[1]);*/
-
-
     return 0;
 }

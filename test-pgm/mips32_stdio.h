@@ -3,7 +3,6 @@
 #ifndef __MIPS32_STDIO_H__
 #define __MIPS32_STDIO_H__
 #define SIZE_BUFF 10//2564
-#define UMBRAL 5 // (SIZE_BUFF) - (length(255\n) + \0)
 
 int length;
 char mips32_buff[SIZE_BUFF];

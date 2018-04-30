@@ -5,6 +5,7 @@
 #define OFFSET_GP 16
 #define OFFSET_A0 32
 #define OFFSET_A1 36
+#define UMBRAL 5 // (SIZE_BUFF) - (length(255\n) + \0)
                             # 32______
                             #   |////|
                             # 28+----+
@@ -39,6 +40,19 @@ mips32_fprintf:
     move $fp, sp
     sw a0, OFFSET_A0($fp) 
     sw a1, OFFSET_A1($fp)   #end: stack frame
+    lw a0, OFFSET_A1($fp)
+    jal mips32_to_str
+    move a0, v0
+    jal mips32_save
+    la t2, length
+    lw t3, 0(t2)
+    li t4, UMBRAL
+    sub t5, t4, t3
+    bge t5, zero, not_call
+    nop
+    lw a0, OFFSET_A0($fp)
+    jal mips32_fflush
+not_call:
     lw gp, OFFSET_GP($fp)   #begin: return
     lw $fp, OFFSET_FP(sp)
     lw ra, OFFSET_RA(sp)

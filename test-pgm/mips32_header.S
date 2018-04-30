@@ -51,6 +51,8 @@ mips32_header:
     sw a1, OFFSET_A1($fp)   
     sw a2, OFFSET_A2($fp)   
     sw a3, OFFSET_A3($fp)   #end: stack frame
+    la t2, length           #begin: inicializo el length del buff
+    sw zero, 0(t2)          #end: inicializo el length del buff
     lw a0, OFFSET_A0($fp)   #begin: print P2
     la a1, header
     li a2, SIZE_HEADER
