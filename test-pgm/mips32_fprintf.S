@@ -5,7 +5,7 @@
 #define OFFSET_GP 16
 #define OFFSET_A0 32
 #define OFFSET_A1 36
-#define UMBRAL 5 // (SIZE_BUFF) - (length(255\n) + \0)
+#define UMBRAL 2552
                             # 32______
                             #   |////|
                             # 28+----+

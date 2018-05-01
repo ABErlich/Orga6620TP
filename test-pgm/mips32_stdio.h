@@ -2,7 +2,7 @@
 
 #ifndef __MIPS32_STDIO_H__
 #define __MIPS32_STDIO_H__
-#define SIZE_BUFF 10//2564
+#define SIZE_BUFF 2564
 
 int length;
 char mips32_buff[SIZE_BUFF];
