@@ -5,16 +5,16 @@
 
 # Aca podria inicializarlos con un valor default por las dudas que la inicializacion en C no funcione
 
-parametros: 	
+parametros: 	.word 0
 
 upperLeftReal: 	.word 1
-upperLeftImg: 	.word 1
+upperLeftImg: 	.word 2
 lowerRightReal: .word 1
 lowerRightImg: 	.word 1
 stepReal: 		.float 1.0
 stepImg: 		.float 1.0
-resolutionX: 	.word 1
-resolutionY: 	.word 1
+resolutionX: 	.word 640
+resolutionY: 	.word 480
 shades: 		.word 1
 centerReal: 	.word 1
 centerImg: 		.word 1
@@ -32,78 +32,89 @@ c:				.word 1
 
 # mips32_plot: # mips32_plot
 main:
-
 		# temporal
 		la $a0, parametros
+		addi $a0, $a0, 4
 
 		# Inicializo el StackFrame
-		addi $sp, $sp, -68
+		addi $sp, $sp, -56
 
 		# guardo el valor del framePointer del caller
-		sw $fp, 60($sp)
+		sw $fp, 52($sp)
 		# guardo el valor del globalPointer del caller
-		sw $gp, 56($sp)
+		sw $gp, 48($sp)
 		# muevo el fp para que coincida con el stackframe del callee
 		move $fp, $sp
 		
 		# cargo el parametro en el ABA del caller
-		sw $a0, 68($sp)
+		sw $a0, 56($sp)
 		
 		# cargo mis variables desde el parametro
 		la $t0, upperLeftReal
-		sw $t0, 0($a0)
-		
+		lw $t1, 0($a0)
+		sw $t1, 0($t0) 
+			
 		la $t0, upperLeftImg
-		sw $t0, 4($a0)
+		lw $t1, 4($a0)
+		sw $t1, 0($t0)
 
 		la $t0, lowerRightReal
-		sw $t0, 8($a0)
+		lw $t1, 8($a0)
+		sw $t1, 0($t0)
 
 		la $t0, lowerRightImg
-		sw $t0, 12($a0)
+		lw $t1, 12($a0)
+		sw $t1, 0($a0)
 
 		la $t0, stepReal
-		sw $t0, 16($a0)
+		lw $t1, 16($a0)
+		sw $t1, 0($a0)
 
 		la $t0, stepImg
-		sw $t0, 20($a0)
+		lw $t1, 20($a0)
+		sw $t1, 0($a0)
 
 		la $t0, resolutionX
-		sw $t0, 24($a0)
+		lw $t1, 24($a0)
+		sw $t1, 0($a0)
 
 		la $t0, resolutionY
-		sw $t0, 28($a0)
+		lw $t1, 28($a0)
+		sw $t1, 0($a0)
 
 		la $t0, shades
-		sw $t0, 32($a0)
+		lw $t1, 32($a0)
+		sw $t1, 0($a0)
 
 		la $t0, centerReal
-		sw $t0, 36($a0)
+		lw $t1, 36($a0)
+		sw $t1, 0($a0)
 
 		la $t0, centerImg
-		sw $t0, 40($a0)
+		lw $t1, 40($a0)
+		sw $t1, 0($a0)
 
 		la $t0, fileNumber
-		sw $t0, 44($a0)
+		lw $t1, 44($a0)
+		sw $t1, 0($a0)
 
 		# paso parametros y llamo a la funcion que imprime el header
 		lw $t0, fileNumber
 		# #########################################################
 		# jal mips32_header
 		# ########################################################
-		# inicializacion del for mas grande
-		# ci = upperLeftImg, y = 0		
 
+
+		# inicializacion del for mas grande
 		lw $t0, upperLeftImg
+		la $t3, pointImg
+		la $t4, y
 
 		addu $t1, $t0, $0 
 		addu $t2, $0, $0
 
-		la $t3, pointImg
-		la $t4, y
-
-		sw $t3, 0($t1)
-		sw $t4, 0($t4)
+		sw $t1, 0($t3) # ci = upperLeftImg
+		sw $t2, 0($t4) # y = 0 
 		
 		b LoopImg
 
@@ -118,17 +129,15 @@ LoopImg: # LoopImg: Loop sobre eje imaginario
 			
 		# Inicializo variables para el loop real
 		# cr = upperLeftReal, x = 0		
-
 		lw $t0, upperLeftReal
+		la $t3, pointReal
+		la $t4, x
 
 		addu $t1, $t0, $0 
 		addu $t2, $0, $0
 
-		la $t3, pointReal
-		la $t4, x
-
-		sw $t3, 0($t1)
-		sw $t4, 0($t2)
+		sw $t2, 0($t4) # x = 0
+		sw $t1, 0($t3) # cr = upperLeftReal
 
 		b LoopReal
 
@@ -148,7 +157,7 @@ LoopReal: # LoopReal: Loop sobre eje real
 		la $t0, c
 
 		addu $t1, $0, $0
-		sw $t0, 0($t1)
+		sw $t1, 0($t0)
 
 		b LoopPixel
 	
@@ -164,8 +173,9 @@ LoopPixel: # LoopPixel: Loop en cada punto
 		bge $t1, $t0, EndLoopPixel
 		
 		la $t2, c
+
 		addu $t1, $t1, 1
-		sw $t2, 0($t1)
+		sw $t1, 0($t2)
 
 		b LoopPixel
 		
@@ -184,8 +194,8 @@ EndLoopPixel: # EndLoopPixel
 		lw $t4, stepReal
 
 		addu $t1, $t1, 1
-		addu $t3, $t3, $t3
-		sw $t2, 0($t3)
+		addu $t3, $t3, $t4
+		sw $t3, 0($t2)
 
 		b LoopReal
 
@@ -200,8 +210,8 @@ EndLoopReal: # EndLoopReal
 		lw $t4, stepImg
 
 		addu $t1, $t1, 1
-		subu $t3, $t3, $t3
-		sw $t2, 0($t3)
+		subu $t3, $t3, $t4
+		sw $t3, 0($t2)
 		
 		b LoopImg
 
@@ -214,9 +224,7 @@ calculateMod: # calculateMod: Calcula el modulo de un numero complejo
 End_mips32_plot: # End_mips32_plot
 
 	# #################ACA TENGO QUE TIRAR EL FLUSH####################
-
-
-	addi $sp, $sp, 68
+	addi $sp, $sp, 56
 
 	li $v0, 10
 	syscall
