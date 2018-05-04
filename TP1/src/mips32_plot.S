@@ -3,46 +3,53 @@
 
 .data
 
-#Aca podria inicializarlos con un valor default por las dudas que la inicializacion en C no funcione
+# Aca podria inicializarlos con un valor default por las dudas que la inicializacion en C no funcione
 
-upperLeftReal: 	.word 0
-upperLeftImg: 	.word 0
-lowerRightReal: .word 0
-lowerRightImg: 	.word 0
-stepReal: 		.float 0.0
-stepImg: 		.float 0.0
-resolutionX: 	.word 0
-resolutionY: 	.word 0
-shades: 		.word 0
-centerReal: 	.word 0
-centerImg: 		.word 0
-fileNumber: 	.word 0
-pointReal: 		.word 0
-pointImg: 		.word 0
-y:				.word 0
-x:				.word 0
-c:				.word 0
+parametros: 	
+
+upperLeftReal: 	.word 1
+upperLeftImg: 	.word 1
+lowerRightReal: .word 1
+lowerRightImg: 	.word 1
+stepReal: 		.float 1.0
+stepImg: 		.float 1.0
+resolutionX: 	.word 1
+resolutionY: 	.word 1
+shades: 		.word 1
+centerReal: 	.word 1
+centerImg: 		.word 1
+fileNumber: 	.word 1
+pointReal: 		.word 1
+pointImg: 		.word 1
+y:				.word 1
+x:				.word 1
+c:				.word 1
 
 
 .text
 .globl mips32_plot
 .ent mips32_plot
 
-mips32_plot: 
-		#Inicializo el StackFrame
-		li $t0, 68
-		subu $sp, $sp, $t0
-		#guardo el valor del framePointer del caller
+# mips32_plot: # mips32_plot
+main:
+
+		# temporal
+		la $a0, parametros
+
+		# Inicializo el StackFrame
+		addi $sp, $sp, -68
+
+		# guardo el valor del framePointer del caller
 		sw $fp, 60($sp)
-		#guardo el valor del globalPointer del caller
+		# guardo el valor del globalPointer del caller
 		sw $gp, 56($sp)
-		#muevo el fp para que coincida con el stackframe del callee
+		# muevo el fp para que coincida con el stackframe del callee
 		move $fp, $sp
 		
-		#cargo el parametro en el ABA del caller
+		# cargo el parametro en el ABA del caller
 		sw $a0, 68($sp)
 		
-		#cargo mis variables desde el parametro
+		# cargo mis variables desde el parametro
 		la $t0, upperLeftReal
 		sw $t0, 0($a0)
 		
@@ -79,9 +86,12 @@ mips32_plot:
 		la $t0, fileNumber
 		sw $t0, 44($a0)
 
-		#########################ACA SE DEBERIA IMPRIMIR EL HEADER#####################################
-
-		#inicializacion del for mas grande
+		# paso parametros y llamo a la funcion que imprime el header
+		lw $t0, fileNumber
+		# #########################################################
+		# jal mips32_header
+		# ########################################################
+		# inicializacion del for mas grande
 		# ci = upperLeftImg, y = 0		
 
 		lw $t0, upperLeftImg
@@ -93,14 +103,14 @@ mips32_plot:
 		la $t4, y
 
 		sw $t3, 0($t1)
-		sw $t4, 0($t2)
+		sw $t4, 0($t4)
 		
 		b LoopImg
 
 .end mips32_plot
 
-#Loop sobre eje imaginario
-LoopImg:
+
+LoopImg: # LoopImg: Loop sobre eje imaginario
 		lw $t0, resolutionY
 		lw $t1, y
 
@@ -125,14 +135,14 @@ LoopImg:
 .end LoopImg
 
 
-#Loop sobre eje real
-LoopReal:
+
+LoopReal: # LoopReal: Loop sobre eje real
 		lw $t0, resolutionX
 		lw $t1, x
 
 		bge $t0, $t1, EndLoopReal
 		
-		#inicializo variables para el loop sobre el pixel
+		# inicializo variables para el loop sobre el pixel
 		# c=0
 
 		la $t0, c
@@ -144,9 +154,7 @@ LoopReal:
 	
 .end LoopReal
 
-
-#Loop en cada punto
-LoopPixel:
+LoopPixel: # LoopPixel: Loop en cada punto
 		lw $t0, shades
 		lw $t1, c
 
@@ -164,11 +172,11 @@ LoopPixel:
 .end LoopPixel		
 
 		
-EndLoopPixel:
+EndLoopPixel: # EndLoopPixel
 
-		################ACA DEBERIA IMPRIMIR EL NUMERO##########################
+		# ###############ACA DEBERIA IMPRIMIR EL NUMERO##########################
 
-		#incremento variables del loop real
+		# incremento variables del loop real
 		la $t0, x
 		lw $t1, x
 		la $t2, pointReal
@@ -183,8 +191,8 @@ EndLoopPixel:
 
 .end EndLoopPixel
 
-EndLoopReal:
-		 #incremento variables del loop img
+EndLoopReal: # EndLoopReal
+		# incremento variables del loop img
 		la $t0, y
 		lw $t1, y
 		la $t2, pointImg
@@ -199,13 +207,16 @@ EndLoopReal:
 
 .end EndLoopReal
 		
-calculateMod:
+calculateMod: # calculateMod: Calcula el modulo de un numero complejo
 		jr $ra
 .end calculateMod
 		
-End_mips32_plot:
+End_mips32_plot: # End_mips32_plot
 
-	##################ACA TENGO QUE TIRAR EL FLUSH####################
+	# #################ACA TENGO QUE TIRAR EL FLUSH####################
+
+
+	addi $sp, $sp, 68
 
 	li $v0, 10
 	syscall
