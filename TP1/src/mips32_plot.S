@@ -7,20 +7,20 @@
 
 parametros: 	.word 0
 
-upperLeftReal: 	.word 1
-upperLeftImg: 	.word 2
+upperLeftReal: 	.word -1
+upperLeftImg: 	.word 1
 lowerRightReal: .word 1
-lowerRightImg: 	.word 1
-stepReal: 		.float 1.0
-stepImg: 		.float 1.0
+lowerRightImg: 	.word -1
+stepReal: 		.float 0.003125
+stepImg: 		.float 0.004666
 resolutionX: 	.word 640
 resolutionY: 	.word 480
-shades: 		.word 1
-centerReal: 	.word 1
-centerImg: 		.word 1
+shades: 		.word 255
+centerReal: 	.word 0
+centerImg: 		.word 0
 fileNumber: 	.word 1
-pointReal: 		.word 1
-pointImg: 		.word 1
+pointReal: 		.word 0
+pointImg: 		.word 0
 y:				.word 1
 x:				.word 1
 c:				.word 1
@@ -64,46 +64,45 @@ main:
 
 		la $t0, lowerRightImg
 		lw $t1, 12($a0)
-		sw $t1, 0($a0)
+		sw $t1, 0($t0)
 
 		la $t0, stepReal
-		lw $t1, 16($a0)
-		sw $t1, 0($a0)
+		lwc1 $f0, 16($a0)
+		swc1 $f0, 0($t0)
 
 		la $t0, stepImg
-		lw $t1, 20($a0)
-		sw $t1, 0($a0)
+		lwc1 $f0, 20($a0)
+		swc1 $f0, 0($t0)
 
 		la $t0, resolutionX
 		lw $t1, 24($a0)
-		sw $t1, 0($a0)
+		sw $t1, 0($t0)
 
 		la $t0, resolutionY
 		lw $t1, 28($a0)
-		sw $t1, 0($a0)
+		sw $t1, 0($t0)
 
 		la $t0, shades
 		lw $t1, 32($a0)
-		sw $t1, 0($a0)
+		sw $t1, 0($t0)
 
 		la $t0, centerReal
 		lw $t1, 36($a0)
-		sw $t1, 0($a0)
+		sw $t1, 0($t0)
 
 		la $t0, centerImg
 		lw $t1, 40($a0)
-		sw $t1, 0($a0)
+		sw $t1, 0($t0)
 
 		la $t0, fileNumber
 		lw $t1, 44($a0)
-		sw $t1, 0($a0)
+		sw $t1, 0($t0)
 
 		# paso parametros y llamo a la funcion que imprime el header
 		lw $t0, fileNumber
 		# #########################################################
 		# jal mips32_header
 		# ########################################################
-
 
 		# inicializacion del for mas grande
 		lw $t0, upperLeftImg
@@ -142,8 +141,6 @@ LoopImg: # LoopImg: Loop sobre eje imaginario
 		b LoopReal
 
 .end LoopImg
-
-
 
 LoopReal: # LoopReal: Loop sobre eje real
 		lw $t0, resolutionX
@@ -218,7 +215,7 @@ EndLoopReal: # EndLoopReal
 .end EndLoopReal
 		
 calculateMod: # calculateMod: Calcula el modulo de un numero complejo
-		jr $ra
+	jr $ra
 .end calculateMod
 		
 End_mips32_plot: # End_mips32_plot
