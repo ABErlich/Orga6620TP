@@ -14,13 +14,17 @@ upperLeftImg: 	.float 1.0
 lowerRightReal: .float 1.0
 lowerRightImg: 	.float -1.0
 stepReal: 		.float 0.003125
-stepImg: 		.float 0.004666
+stepImg: 		.double 0.004666
+seedReal:		.float 0.72689534770911
+seedImg:		.float 0.18888712904384
 resolutionX: 	.word 640
 resolutionY: 	.word 480
 shades: 		.word 255
+filePointer: 	.word 0
+
+
 centerReal: 	.float 0.0
 centerImg: 		.float 0.0
-fileNumber: 	.word 1
 pointReal: 		.float 0.0
 pointImg: 		.float 0.0
 y:				.word 0
@@ -69,39 +73,39 @@ main:
 		s.s $f1, 0($t0)
 
 		la $t0, stepReal
-		l.s $f0, 16($a0)
-		s.s $f0, 0($t0)
+		l.d $f0, 16($a0)
+		s.d $f0, 0($t0)
 
 		la $t0, stepImg
-		l.s $f0, 20($a0)
-		s.s $f0, 0($t0)
+		l.d $f2, 20($a0)
+		s.d $f2, 0($t0)
+
+		la $t0, seedReal
+		l.s $f1, 24($a0)
+		s.s $f1, 0($t0)
+
+		la $t0, seedImg
+		l.s $f1, 28($a0)
+		s.s $f1, 0($t0)
 
 		la $t0, resolutionX
-		lw $t1, 24($a0)
-		sw $t1, 0($t0)
-
-		la $t0, resolutionY
-		lw $t1, 28($a0)
-		sw $t1, 0($t0)
-
-		la $t0, shades
 		lw $t1, 32($a0)
 		sw $t1, 0($t0)
 
-		la $t0, centerReal
-		l.s $f1, 36($a0)
-		s.s $f1, 0($t0)
+		la $t0, resolutionY
+		lw $t1, 36($a0)
+		sw $t1, 0($t0)
 
-		la $t0, centerImg
-		l.s $f1, 40($a0)
-		s.s $f1, 0($t0)
+		la $t0, shades
+		lw $t1, 40($a0)
+		sw $t1, 0($t0)
 
-		la $t0, fileNumber
+		la $t0, filePointer
 		lw $t1, 44($a0)
 		sw $t1, 0($t0)
 
 		# paso parametros y llamo a la funcion que imprime el header
-		lw $t0, fileNumber
+
 		# #########################################################
 		# jal mips32_header
 		# ########################################################
@@ -153,6 +157,9 @@ LoopReal: # LoopReal: Loop sobre eje real
 		lw $t1, x
 
 		bge $t1, $t0, EndLoopReal
+
+		l.s $f10, pointReal
+		l.s $f11, pointImg
 		
 		# inicializo variables para el loop sobre el pixel
 		# c=0
@@ -161,6 +168,19 @@ LoopReal: # LoopReal: Loop sobre eje real
 
 		addu $t1, $0, $0
 		sw $t1, 0($t0)
+		
+		lw $t0, x
+		lw $t1, y
+		li $t2, 0
+
+		li  $v0, 1          # service 1 is print integer
+    	add $a0, $t0, $t2  # load desired value into argument register $a0, using pseudo-op
+    	syscall
+
+		li  $v0, 1           # service 1 is print integer
+    	add $a0, $t1, $t2  # load desired value into argument register $a0, using pseudo-op
+    	syscall
+
 
 		b LoopPixel
 	
@@ -172,9 +192,26 @@ LoopPixel: # LoopPixel: Loop en cada punto
 
 		jal calculateMod
 
-		bge $v0, 4, EndLoopPixel
+		li.s $f0, 4.0
+
+		c.le.s $f0, $f12
+		bc1t EndLoopPixel
 		bge $t1, $t0, EndLoopPixel
 		
+
+		l.s $f0, seedReal
+		l.s $f1, seedImg
+		li.s $f2, 2.0
+
+		mul.s $f30, $f10, $f11 # f30 = zr * zi
+		mul.s $f30, $f30, $f1 # f30 = zr * zi * 2
+		mul.s $f10, $f10, $f10 # f10 = zr*zr
+		mul.s $f11, $f11, $f11 # f11 = zi*zi
+		
+		sub.s $f29, $f10, $f11 # f29 =  zr*zr - zi*zi
+		add.s $f10, $f29, $f0 # f10 = s_re + zr * zr - zi * zi
+		add.s $f11, $f30, $f1 # f11 = (zr * zi * 2) + s_im
+
 		la $t2, c
 
 		addu $t1, $t1, 1
@@ -229,16 +266,27 @@ EndLoopReal: # EndLoopReal
 .end EndLoopReal
 		
 calculateMod: # calculateMod: Calcula el modulo de un numero complejo
-	jr $ra
+
+		li.s $f2, 0.0
+
+		add.s $f0, $f10, $f2
+		add.s $f1, $f11, $f2
+
+		mul.s $f0, $f0, $f0
+		mul.s $f1, $f1, $f1
+
+		add.s $f12, $f0, $f1
+
+		jr $ra
 .end calculateMod
 		
 End_mips32_plot: # End_mips32_plot
 
-	# #################ACA TENGO QUE TIRAR EL FLUSH####################
-	addi $sp, $sp, 56
+		# #################ACA TENGO QUE TIRAR EL FLUSH####################
+		addi $sp, $sp, 56
 
-	li $v0, 10
-	syscall
+		li $v0, 10
+		syscall
 .end End_mips32_plot
 	
 	
