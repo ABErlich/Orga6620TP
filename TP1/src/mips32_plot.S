@@ -1,4 +1,6 @@
 
+
+
 .align 2
 
 .data
@@ -7,23 +9,23 @@
 
 parametros: 	.word 0
 
-upperLeftReal: 	.word -1
-upperLeftImg: 	.word 1
-lowerRightReal: .word 1
-lowerRightImg: 	.word -1
+upperLeftReal: 	.float -1.0
+upperLeftImg: 	.float 1.0
+lowerRightReal: .float 1.0
+lowerRightImg: 	.float -1.0
 stepReal: 		.float 0.003125
 stepImg: 		.float 0.004666
 resolutionX: 	.word 640
 resolutionY: 	.word 480
 shades: 		.word 255
-centerReal: 	.word 0
-centerImg: 		.word 0
+centerReal: 	.float 0.0
+centerImg: 		.float 0.0
 fileNumber: 	.word 1
-pointReal: 		.word 0
-pointImg: 		.word 0
-y:				.word 1
-x:				.word 1
-c:				.word 1
+pointReal: 		.float 0.0
+pointImg: 		.float 0.0
+y:				.word 0
+x:				.word 0
+c:				.word 0
 
 
 .text
@@ -51,28 +53,28 @@ main:
 		
 		# cargo mis variables desde el parametro
 		la $t0, upperLeftReal
-		lw $t1, 0($a0)
-		sw $t1, 0($t0) 
+		l.s $f1, 0($a0)
+		s.s $f1, 0($t0) 
 			
 		la $t0, upperLeftImg
-		lw $t1, 4($a0)
-		sw $t1, 0($t0)
+		l.s $f1, 4($a0)
+		s.s $f1, 0($t0)
 
 		la $t0, lowerRightReal
-		lw $t1, 8($a0)
-		sw $t1, 0($t0)
+		l.s $f1, 8($a0)
+		s.s $f1, 0($t0)
 
 		la $t0, lowerRightImg
-		lw $t1, 12($a0)
-		sw $t1, 0($t0)
+		l.s $f1, 12($a0)
+		s.s $f1, 0($t0)
 
 		la $t0, stepReal
-		lwc1 $f0, 16($a0)
-		swc1 $f0, 0($t0)
+		l.s $f0, 16($a0)
+		s.s $f0, 0($t0)
 
 		la $t0, stepImg
-		lwc1 $f0, 20($a0)
-		swc1 $f0, 0($t0)
+		l.s $f0, 20($a0)
+		s.s $f0, 0($t0)
 
 		la $t0, resolutionX
 		lw $t1, 24($a0)
@@ -87,12 +89,12 @@ main:
 		sw $t1, 0($t0)
 
 		la $t0, centerReal
-		lw $t1, 36($a0)
-		sw $t1, 0($t0)
+		l.s $f1, 36($a0)
+		s.s $f1, 0($t0)
 
 		la $t0, centerImg
-		lw $t1, 40($a0)
-		sw $t1, 0($t0)
+		l.s $f1, 40($a0)
+		s.s $f1, 0($t0)
 
 		la $t0, fileNumber
 		lw $t1, 44($a0)
@@ -105,14 +107,16 @@ main:
 		# ########################################################
 
 		# inicializacion del for mas grande
-		lw $t0, upperLeftImg
+		l.s $f1, upperLeftImg
 		la $t3, pointImg
 		la $t4, y
 
-		addu $t1, $t0, $0 
+		li.s $f0, 0.0
+
+		add.s $f1, $f1, $f0
 		addu $t2, $0, $0
 
-		sw $t1, 0($t3) # ci = upperLeftImg
+		s.s $f1, 0($t3) # ci = upperLeftImg
 		sw $t2, 0($t4) # y = 0 
 		
 		b LoopImg
@@ -124,19 +128,21 @@ LoopImg: # LoopImg: Loop sobre eje imaginario
 		lw $t0, resolutionY
 		lw $t1, y
 
-		bge $t0, $t1, End_mips32_plot
+		bge $t1, $t0, End_mips32_plot
 			
 		# Inicializo variables para el loop real
 		# cr = upperLeftReal, x = 0		
-		lw $t0, upperLeftReal
+		l.s $f1, upperLeftReal
 		la $t3, pointReal
 		la $t4, x
 
-		addu $t1, $t0, $0 
+		li.s $f0, 0.0
+
+		add.s $f1, $f1, $f0 
 		addu $t2, $0, $0
 
 		sw $t2, 0($t4) # x = 0
-		sw $t1, 0($t3) # cr = upperLeftReal
+		s.s $f1, 0($t3) # cr = upperLeftReal
 
 		b LoopReal
 
@@ -146,7 +152,7 @@ LoopReal: # LoopReal: Loop sobre eje real
 		lw $t0, resolutionX
 		lw $t1, x
 
-		bge $t0, $t1, EndLoopReal
+		bge $t1, $t0, EndLoopReal
 		
 		# inicializo variables para el loop sobre el pixel
 		# c=0
@@ -184,15 +190,19 @@ EndLoopPixel: # EndLoopPixel
 		# ###############ACA DEBERIA IMPRIMIR EL NUMERO##########################
 
 		# incremento variables del loop real
+		# cr += stepreal
+		# x++
+
 		la $t0, x
 		lw $t1, x
 		la $t2, pointReal
-		lw $t3, pointReal
-		lw $t4, stepReal
+		l.s $f0, pointReal
+		l.s $f1, stepReal
 
 		addu $t1, $t1, 1
-		addu $t3, $t3, $t4
-		sw $t3, 0($t2)
+		sw $t1, 0($t0) # x++
+		add.s $f0, $f0, $f1 # cr += stepreal
+		s.s $f0, 0($t2)
 
 		b LoopReal
 
@@ -200,15 +210,19 @@ EndLoopPixel: # EndLoopPixel
 
 EndLoopReal: # EndLoopReal
 		# incremento variables del loop img
+		# ci -= stepimg
+		# y++
+
 		la $t0, y
 		lw $t1, y
 		la $t2, pointImg
-		lw $t3, pointImg
-		lw $t4, stepImg
+		l.s $f0, pointImg
+		l.s $f1, stepImg
 
 		addu $t1, $t1, 1
-		subu $t3, $t3, $t4
-		sw $t3, 0($t2)
+		sw $t1, 0($t0) # y++
+		sub.s $f0, $f0, $f1 # ci -= stepimg
+		s.s $f0, 0($t2)
 		
 		b LoopImg
 
