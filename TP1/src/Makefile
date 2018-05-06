@@ -11,7 +11,7 @@ DEFS    = -I. -D$(SYSTYPE)
 CFLAGS  = $(DEBUG) $(OPT) $(DEFS)
 OPTS	= 'CC=$(CC)'
 HDRS    = debug.h defs.h mygetopt.h param.h
-SRCS	= mips32_plot.c main.c mygetopt_long.c generic_plot.c
+SRCS	= mips32_plot.S main.c mygetopt_long.c generic_plot.c
 PROG	= tp1
 
 $(PROG): $(SRCS) $(HDRS)

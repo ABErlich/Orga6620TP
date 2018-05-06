@@ -14,7 +14,7 @@ upperLeftImg: 	.float 1.0
 lowerRightReal: .float 1.0
 lowerRightImg: 	.float -1.0
 stepReal: 		.float 0.003125
-stepImg: 		.double 0.004666
+stepImg: 		.float 0.004666
 seedReal:		.float 0.72689534770911
 seedImg:		.float 0.18888712904384
 resolutionX: 	.word 640
@@ -73,12 +73,12 @@ main:
 		s.s $f1, 0($t0)
 
 		la $t0, stepReal
-		l.d $f0, 16($a0)
-		s.d $f0, 0($t0)
+		l.s $f0, 16($a0)
+		s.s $f0, 0($t0)
 
 		la $t0, stepImg
-		l.d $f2, 20($a0)
-		s.d $f2, 0($t0)
+		l.s $f1, 20($a0)
+		s.s $f1, 0($t0)
 
 		la $t0, seedReal
 		l.s $f1, 24($a0)
@@ -158,8 +158,8 @@ LoopReal: # LoopReal: Loop sobre eje real
 
 		bge $t1, $t0, EndLoopReal
 
-		l.s $f10, pointReal
-		l.s $f11, pointImg
+		l.s $f12, pointReal
+		l.s $f14, pointImg
 		
 		# inicializo variables para el loop sobre el pixel
 		# c=0
@@ -173,15 +173,6 @@ LoopReal: # LoopReal: Loop sobre eje real
 		lw $t1, y
 		li $t2, 0
 
-		li  $v0, 1          # service 1 is print integer
-    	add $a0, $t0, $t2  # load desired value into argument register $a0, using pseudo-op
-    	syscall
-
-		li  $v0, 1           # service 1 is print integer
-    	add $a0, $t1, $t2  # load desired value into argument register $a0, using pseudo-op
-    	syscall
-
-
 		b LoopPixel
 	
 .end LoopReal
@@ -194,23 +185,22 @@ LoopPixel: # LoopPixel: Loop en cada punto
 
 		li.s $f0, 4.0
 
-		c.le.s $f0, $f12
+		c.le.s $f0, $f16
 		bc1t EndLoopPixel
 		bge $t1, $t0, EndLoopPixel
 		
-
 		l.s $f0, seedReal
 		l.s $f1, seedImg
 		li.s $f2, 2.0
 
-		mul.s $f30, $f10, $f11 # f30 = zr * zi
-		mul.s $f30, $f30, $f1 # f30 = zr * zi * 2
-		mul.s $f10, $f10, $f10 # f10 = zr*zr
-		mul.s $f11, $f11, $f11 # f11 = zi*zi
+		mul.s $f30, $f12, $f14 # f30 = zr * zi
+		mul.s $f30, $f30, $f2 # f30 = zr * zi * 2
+		mul.s $f12, $f12, $f12 # f12 = zr*zr
+		mul.s $f14, $f14, $f14 # f14 = zi*zi
 		
-		sub.s $f29, $f10, $f11 # f29 =  zr*zr - zi*zi
-		add.s $f10, $f29, $f0 # f10 = s_re + zr * zr - zi * zi
-		add.s $f11, $f30, $f1 # f11 = (zr * zi * 2) + s_im
+		sub.s $f29, $f12, $f14 # f29 =  zr*zr - zi*zi
+		add.s $f12, $f0, $f29 # f12 = s_re + zr * zr - zi * zi
+		add.s $f14, $f30, $f1 # f14 = (zr * zi * 2) + s_im
 
 		la $t2, c
 
@@ -219,12 +209,18 @@ LoopPixel: # LoopPixel: Loop en cada punto
 
 		b LoopPixel
 		
-.end LoopPixel		
+.end LoopPixel
 
 		
 EndLoopPixel: # EndLoopPixel
 
 		# ###############ACA DEBERIA IMPRIMIR EL NUMERO##########################
+		# Por ahora lo saco por consola
+		lw $t1, c
+		li  $v0, 1          # service 1 is print integer
+    	add $a0, $zero, $t1  # load desired value into argument register $a0, using pseudo-op
+    	syscall
+
 
 		# incremento variables del loop real
 		# cr += stepreal
@@ -269,13 +265,13 @@ calculateMod: # calculateMod: Calcula el modulo de un numero complejo
 
 		li.s $f2, 0.0
 
-		add.s $f0, $f10, $f2
-		add.s $f1, $f11, $f2
+		add.s $f0, $f12, $f2
+		add.s $f1, $f14, $f2
 
 		mul.s $f0, $f0, $f0
 		mul.s $f1, $f1, $f1
 
-		add.s $f12, $f0, $f1
+		add.s $f16, $f0, $f1
 
 		jr $ra
 .end calculateMod

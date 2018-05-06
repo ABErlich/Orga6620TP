@@ -3,6 +3,9 @@
 #include "defs.h"
 #include "param.h"
 
+
+extern float calculateSquare(float real, float img);
+
 void mips32_plot(param_t *parms) {
 	float cr, ci;
 	float zr, zi;
@@ -37,14 +40,18 @@ void mips32_plot(param_t *parms) {
 			 * f = f^2 + s.
 			 */
 			for (c = 0; c < parms->shades; ++c) {
-				if ((absz = zr*zr + zi*zi) >= 4.0f)
+
+				if ((absz = zr*zr + zi*zi) >= 4.0f){
 					break;
+				}
 
 				tr = parms->s_re + zr * zr - zi * zi;
 				ti = parms->s_im + zr * zi * 2.0f;
 
 				zr = tr;
 				zi = ti;
+
+				
 			}
 
 			if (fprintf(parms->fp, "%u\n", (unsigned)c) < 0) {
