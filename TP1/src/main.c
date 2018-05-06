@@ -111,6 +111,7 @@ static void parse_cmdline(int argc, char * const argv[]) {
 	}
 
 	if (plot == NULL)
+		//plot = &generic_plot;
 		plot = &mips32_plot;
 
 	if (output == NULL)

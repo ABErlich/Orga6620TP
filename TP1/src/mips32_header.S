@@ -27,6 +27,7 @@
                             #   |(a0)|
                             #  0------
     .rdata                  #Seccion de rdata.
+
     .align 2
 header:
     .ascii "P2\n\000"
