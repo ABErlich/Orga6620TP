@@ -8,7 +8,7 @@
 #define OFFSET_A1 36
 #define OFFSET_A2 40
 #define OFFSET_A3 44
-#define SIZE_HEADER 4
+#define SIZE_HEADER 3
                             # 32______
                             #   |////|
                             # 28+----+
