@@ -15,7 +15,7 @@ lowerRightReal: .float 1.0
 lowerRightImg: 	.float -1.0
 stepReal: 		.float 0.003125
 stepImg: 		.float 0.004666
-seedReal:		.float 0.72689534770911
+seedReal:		.float -0.72689534770911
 seedImg:		.float 0.18888712904384
 resolutionX: 	.word 640
 resolutionY: 	.word 480
@@ -164,7 +164,6 @@ LoopReal: # LoopReal: Loop sobre eje real
 
 		l.s $f12, pointReal
 		l.s $f14, pointImg
-		
 		# inicializo variables para el loop sobre el pixel
 		# c=0
 
@@ -172,10 +171,6 @@ LoopReal: # LoopReal: Loop sobre eje real
 
 		addu t1, zero, zero
 		sw t1, 0(t0)
-		
-		lw t0, x
-		lw t1, y
-		li t2, 0
 
 		b LoopPixel
 	
@@ -185,13 +180,12 @@ LoopPixel: # LoopPixel: Loop en cada punto
 		lw t0, shades
 		lw t1, c
 
+		bge t1, t0, EndLoopPixel # condicion del loop
+
 		jal calculateMod
-
 		li.s $f0, 4.0
-
 		c.le.s $f0, $f16
-		bc1t EndLoopPixel
-		bge t1, t0, EndLoopPixel
+		bc1t EndLoopPixel # Si modulo >= 4
 		
 		l.s $f0, seedReal
 		l.s $f2, seedImg
@@ -229,7 +223,6 @@ EndLoopPixel: # EndLoopPixel
 		li  v0, 1          # service 1 is print integer
     	add a0, zero, t1  # load desired value into argument register $a0, using pseudo-op
     	syscall
-
 
 		# incremento variables del loop real
 		# cr += stepreal

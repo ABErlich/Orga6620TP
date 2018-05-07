@@ -1,4 +1,3 @@
-.align 2
 
 .data
 
@@ -12,13 +11,16 @@ lowerRightReal: .float 1.0
 lowerRightImg: 	.float -1.0
 stepReal: 		.float 0.003125
 stepImg: 		.float 0.004666
-seedReal:		.float 0.72689534770911
+seedReal:		.float -0.72689534770911
 seedImg:		.float 0.18888712904384
 resolutionX: 	.word 640
 resolutionY: 	.word 480
 shades: 		.word 255
 filePointer: 	.word 0
 
+open: 			.asciiz "("
+close:			.asciiz ")"
+coma:			.asciiz ","
 
 centerReal: 	.float 0.0
 centerImg: 		.float 0.0
@@ -28,10 +30,9 @@ y:				.word 0
 x:				.word 0
 c:				.word 0
 
-
 .text
-.globl mips32_plot
-.ent mips32_plot
+.globl main
+.ent main
 
 # mips32_plot: # mips32_plot
 main:
@@ -169,26 +170,43 @@ LoopReal: # LoopReal: Loop sobre eje real
 
 		addu $t1, $zero, $zero
 		sw $t1, 0($t0)
-		
-		lw $t0, x
-		lw $t1, y
-		li $t2, 0
+
+		# ##### Parentesis
+		#li  $v0, 4           # service 1 is print integer
+		#la $a0, open
+    	#syscall
+
+		#li  $v0, 2          # service 1 is print integer
+    	#l.s $f12, pointReal
+    	#syscall
+
+		# ########### coma
+		#li  $v0, 4
+		#la $a0, coma
+    	#syscall
+
+		#li  $v0, 2
+		#l.s $f12, pointImg
+    	#syscall
+
+		# ########### Parentesis
+		#li  $v0, 4
+		#la $a0, close
+    	#syscall
 
 		b LoopPixel
 	
-
 
 LoopPixel: # LoopPixel: Loop en cada punto
 		lw $t0, shades
 		lw $t1, c
 
+		bge $t1, $t0, EndLoopPixel # CONDICION DEL LOOP
+
 		jal calculateMod
-
 		li.s $f0, 4.0
-
 		c.le.s $f0, $f16
-		bc1t EndLoopPixel
-		bge $t1, $t0, EndLoopPixel
+		bc1t EndLoopPixel # Si modulo >= 4
 		
 		l.s $f0, seedReal
 		l.s $f2, seedImg
@@ -221,11 +239,26 @@ EndLoopPixel: # EndLoopPixel
 		# jal mips32_fprintf
 		# ##############################################################
 
+		# ##### Parentesis
+		#li  $v0, 4           # service 1 is print integer
+		#la $a0, open
+    	#syscall
+
 		# Por ahora lo saco por consola
 		lw $t1, c
 		li  $v0, 1          # service 1 is print integer
     	add $a0, $zero, $t1  # load desired value into argument register $a0, using pseudo-op
     	syscall
+
+		# ########### coma
+		li  $v0, 4
+		la $a0, coma
+    	syscall
+
+		# ########### Parentesis
+		#li  $v0, 4     
+		#la $a0, close
+    	#syscall
 
 
 		# incremento variables del loop real
