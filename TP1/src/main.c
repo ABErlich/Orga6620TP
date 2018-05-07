@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "mips32_stdio.h"
 #include "defs.h"
 #include "debug.h"
 #include "param.h"
@@ -341,6 +342,8 @@ static void do_plot(void) {
 	parms.y_res = y_res;
 	parms.shades = 256;
 	parms.fp = output;
+
+	printf("Por entrar a mips");
 
 	plot(&parms);
 }

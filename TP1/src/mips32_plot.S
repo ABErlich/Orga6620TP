@@ -35,16 +35,19 @@ c:				.word 0
 .text
 .globl mips32_plot
 .ent mips32_plot
+.extern mips32_header
+.extern mips32_plot
 
-mips32_plot: # mips32_plot
-# main:
-		.frame $fp, 56, ra
+mips32_plot: 
+
+		.frame $fp, 60, ra
+		
 		# temporal
 		# la $a0, parametros
 		# addi $a0, $a0, 4
 
 		# Inicializo el StackFrame
-		addi sp, sp, -56
+		addi sp, sp, -60
 
 		# guardo el valor del framePointer del caller
 		sw $fp, 52(sp)
@@ -53,9 +56,6 @@ mips32_plot: # mips32_plot
 		# sw gp, 48(sp)
 		# muevo el fp para que coincida con el stackframe del callee
 		move $fp, sp
-		
-		# cargo el parametro en el ABA del caller
-		# sw $a0, 56($sp)
 		
 		# cargo mis variables desde el parametro
 		la t0, upperLeftReal
@@ -113,7 +113,7 @@ mips32_plot: # mips32_plot
 		lw a3, shades
 
 		# #########################################################
-		# jal mips32_header
+		jal mips32_header
 		# ########################################################
 
 		# inicializacion del for mas grande
@@ -215,14 +215,14 @@ EndLoopPixel: # EndLoopPixel
 		lw a0, filePointer
 		lw a1, c
 
-		# jal mips32_fprintf
+		jal mips32_fprintf
 		# ##############################################################
 
 		# Por ahora lo saco por consola
-		lw t1, c
-		li  v0, 1          # service 1 is print integer
-    	add a0, zero, t1  # load desired value into argument register $a0, using pseudo-op
-    	syscall
+		# lw t1, c
+		# li  v0, 1          # service 1 is print integer
+    	# add a0, zero, t1  # load desired value into argument register $a0, using pseudo-op
+    	# syscall
 
 		# incremento variables del loop real
 		# cr += stepreal
@@ -279,7 +279,7 @@ calculateMod: # calculateMod: Calcula el modulo de un numero complejo
 End_mips32_plot: # End_mips32_plot
 
 		# #################ACA TENGO QUE TIRAR EL FLUSH####################
-		addi sp, sp, 56
+		addi sp, sp, 60
 
 		li v0, 10
 		syscall
