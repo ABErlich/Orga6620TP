@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "defs.h"
 #include "param.h"
+#include "mips32_stdio.h"
 
 void mips32_plot(param_t *parms) {
 	float cr, ci;
@@ -12,10 +13,14 @@ void mips32_plot(param_t *parms) {
 	int c;
 
 	/* Header PGM. */
-	fprintf(parms->fp, "P2\n");
+/*	fprintf(parms->fp, "P2\n");
 	fprintf(parms->fp, "%u\n", (unsigned)parms->x_res);
 	fprintf(parms->fp, "%u\n", (unsigned)parms->y_res);
 	fprintf(parms->fp, "%u\n", (unsigned)(parms->shades - 1));
+*/
+	mips32_header(parms->fp, (unsigned)parms->x_res, (unsigned)parms->y_res, (unsigned)(parms->shades - 1));
+
+
 
 	/*
 	 * Barremos la regi�n rectangular del plano complejo comprendida
@@ -47,16 +52,18 @@ void mips32_plot(param_t *parms) {
 				zi = ti;
 			}
 
-			if (fprintf(parms->fp, "%u\n", (unsigned)c) < 0) {
+/*			if (fprintf(parms->fp, "%u\n", (unsigned)c) < 0) {
 				fprintf(stderr, "i/o error.\n");
 				exit(1);
-			}
+			}*/
+			mips32_fprintf(parms->fp, (unsigned)c);
 		}
 	}
 
 	/* Flush any buffered information before quit. */
-	if (fflush(parms->fp) != 0) {
+	/*if (fflush(parms->fp) != 0) {
 		fprintf(stderr, "cannot flush output file.\n");
 		exit(1);
-	}
+	}*/
+	mips32_fflush(parms->fp);
 }
