@@ -1,6 +1,25 @@
 #include <mips/regdef.h>
 #include <sys/syscall.h>
 
+                            # 32______
+                            #   |////|
+                            # 28+----+
+                            #   | fp |
+                            # 24+----+
+                            #   | ra |
+                            # 20+----+
+                            #   | gp |
+                            # 16======
+                            #   |(a3)|
+                            # 12+----+
+                            #   |(a2)|
+                            #  8+----+
+                            #   |(a1)|
+                            #  4+----+
+                            #   |(a0)|
+                            #  0------
+
+
 .align 2
 
 .data
@@ -40,21 +59,21 @@ c:				.word 0
 
 mips32_plot: 
 
-		.frame $fp, 60, ra
+		.frame $fp, 32, ra
 		
 		# temporal
 		# la $a0, parametros
 		# addi $a0, $a0, 4
 
 		# Inicializo el StackFrame
-		addi sp, sp, -60
+		addi sp, sp, -32
 
 		# guardo el valor del framePointer del caller
-		sw $fp, 52(sp)
-		sw ra, 56(sp)
+		sw $fp, 24(sp)
+		sw ra, 20(sp)
 		# guardo el valor del globalPointer del caller
-		.cprestore  48    # analogo a sw gp,  48(sp)
-		# sw gp, 48(sp)
+		.cprestore  16    # analogo a sw gp,  16(sp)
+		# sw gp, 16(sp)
 		# muevo el fp para que coincida con el stackframe del callee
 		move $fp, sp
 		
@@ -284,15 +303,15 @@ End_mips32_plot: # End_mips32_plot
 		
 		jal mips32_fflush
 		
-		#addi sp, sp, 60
+		#addi sp, sp, 32
 
 		#li v0, 10
 		#syscall
 
-		lw gp, 48($fp)   #begin: return
-		lw $fp, 52(sp)
-		lw ra, 56(sp)
-		addiu sp, sp, 60
+		lw gp, 16($fp)   #begin: return
+		lw $fp, 24(sp)
+		lw ra, 20(sp)
+		addiu sp, sp, 32
 		jr  ra                  #end: return
 
 	
