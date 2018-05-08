@@ -35,27 +35,28 @@ c:				.word 0
 .text
 .globl mips32_plot
 .ent mips32_plot
+.extern mips32_header
+.extern mips32_plot
 
-mips32_plot: # mips32_plot
-# main:
-		.frame $fp, 56, ra
+mips32_plot: 
+
+		.frame $fp, 60, ra
+		
 		# temporal
 		# la $a0, parametros
 		# addi $a0, $a0, 4
 
 		# Inicializo el StackFrame
-		addi sp, sp, -56
+		addi sp, sp, -60
 
 		# guardo el valor del framePointer del caller
 		sw $fp, 52(sp)
+		sw ra, 56(sp)
 		# guardo el valor del globalPointer del caller
 		.cprestore  48    # analogo a sw gp,  48(sp)
 		# sw gp, 48(sp)
 		# muevo el fp para que coincida con el stackframe del callee
 		move $fp, sp
-		
-		# cargo el parametro en el ABA del caller
-		# sw $a0, 56($sp)
 		
 		# cargo mis variables desde el parametro
 		la t0, upperLeftReal
@@ -219,10 +220,10 @@ EndLoopPixel: # EndLoopPixel
 		# ##############################################################
 
 		# Por ahora lo saco por consola
-		lw t1, c
-		li  v0, 1          # service 1 is print integer
-    	add a0, zero, t1  # load desired value into argument register $a0, using pseudo-op
-    	syscall
+		# lw t1, c
+		# li  v0, 1          # service 1 is print integer
+    	# add a0, zero, t1  # load desired value into argument register $a0, using pseudo-op
+    	# syscall
 
 		# incremento variables del loop real
 		# cr += stepreal
@@ -283,10 +284,16 @@ End_mips32_plot: # End_mips32_plot
 		
 		jal mips32_fflush
 		
-		addi sp, sp, 56
+		#addi sp, sp, 60
 
-		li v0, 10
-		syscall
+		#li v0, 10
+		#syscall
+
+		lw gp, 48($fp)   #begin: return
+		lw $fp, 52(sp)
+		lw ra, 56(sp)
+		addiu sp, sp, 60
+		jr  ra                  #end: return
 
 	
 .end mips32_plot

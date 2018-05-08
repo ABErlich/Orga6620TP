@@ -51,6 +51,7 @@ mips32_plot:
 
 		# guardo el valor del framePointer del caller
 		sw $fp, 52(sp)
+		sw ra, 56(sp)
 		# guardo el valor del globalPointer del caller
 		.cprestore  48    # analogo a sw gp,  48(sp)
 		# sw gp, 48(sp)
@@ -279,10 +280,20 @@ calculateMod: # calculateMod: Calcula el modulo de un numero complejo
 End_mips32_plot: # End_mips32_plot
 
 		# #################ACA TENGO QUE TIRAR EL FLUSH####################
-		addi sp, sp, 60
+		lw a0, filePointer
+		
+		jal mips32_fflush
+		
+		#addi sp, sp, 60
 
-		li v0, 10
-		syscall
+		#li v0, 10
+		#syscall
+
+		lw gp, 48($fp)   #begin: return
+		lw $fp, 52(sp)
+		lw ra, 56(sp)
+		addiu sp, sp, 60
+		jr  ra                  #end: return
 
 	
 .end mips32_plot
