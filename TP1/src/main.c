@@ -343,7 +343,5 @@ static void do_plot(void) {
 	parms.shades = 256;
 	parms.fp = output;
 
-	printf("Por entrar a mips");
-
 	plot(&parms);
 }
